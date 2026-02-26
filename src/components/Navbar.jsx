@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import ThemeToggle from './ThemeToggle'
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false)
@@ -26,6 +27,7 @@ export default function Navbar() {
                 </div>
 
                 <div className="navbar-actions">
+                    <ThemeToggle />
                     <Link to="/auth" className="btn btn-primary">
                         Get Started →
                     </Link>
