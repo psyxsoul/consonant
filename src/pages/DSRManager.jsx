@@ -5,10 +5,6 @@ const typeBadge = (type) => {
     const map = { Erasure: 'badge-red', Access: 'badge-cyan', Portability: 'badge-violet', Rectification: 'badge-amber' }
     return map[type] || 'badge-cyan'
 }
-const statusLabel = (s) => {
-    const map = { 'pending': 'Pending', 'in-progress': 'In Progress', 'completed': 'Completed' }
-    return map[s] || s
-}
 
 export default function DSRManager() {
     const [requests, setRequests] = useState([])
@@ -16,11 +12,13 @@ export default function DSRManager() {
     const [loading, setLoading] = useState(true)
     const [showForm, setShowForm] = useState(false)
     const [form, setForm] = useState({ type: 'Erasure', subject_name: '', subject_email: '', priority: 'Medium' })
+    const [error, setError] = useState(null)
+    const [creating, setCreating] = useState(false)
 
     const load = () => {
         Promise.all([api.getDSR(), api.getDSRStats()])
             .then(([r, s]) => { setRequests(r); setStats(s) })
-            .catch(console.error)
+            .catch(err => setError(err.message))
             .finally(() => setLoading(false))
     }
 
@@ -28,25 +26,50 @@ export default function DSRManager() {
 
     const handleCreate = async (e) => {
         e.preventDefault()
-        try { await api.createDSR(form); setShowForm(false); setForm({ type: 'Erasure', subject_name: '', subject_email: '', priority: 'Medium' }); load() }
-        catch (err) { alert(err.message) }
+        setCreating(true)
+        try {
+            await api.createDSR(form)
+            setShowForm(false)
+            setForm({ type: 'Erasure', subject_name: '', subject_email: '', priority: 'Medium' })
+            load()
+        } catch (err) { setError(err.message) }
+        finally { setCreating(false) }
     }
 
-    if (loading) return <div style={{ padding: 'var(--space-8)', textAlign: 'center', color: 'var(--text-muted)' }}>Loading...</div>
+    const handleUpdateStatus = async (id, newStatus) => {
+        try {
+            const progress = newStatus === 'completed' ? 100 : newStatus === 'in-progress' ? 50 : 20
+            await api.updateDSR(id, { status: newStatus, progress })
+            load()
+        } catch (err) { setError(err.message) }
+    }
+
+    const handleDelete = async (id) => {
+        if (!confirm('Delete this DSR request?')) return
+        try { await api.deleteDSR(id); load() } catch (err) { setError(err.message) }
+    }
+
+    if (loading) return <div style={{ padding: 'var(--space-8)', textAlign: 'center', color: 'var(--text-muted)' }}>Loading DSR data...</div>
 
     return (
         <div>
             <div className="page-header">
                 <div>
                     <h1>DSR Management</h1>
-                    <p className="page-header-subtitle">Track and fulfill Data Subject Rights requests across all data silos</p>
+                    <p className="page-header-subtitle">Track and fulfill Data Subject Rights requests — real CRUD operations</p>
                 </div>
                 <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>+ Log New Request</button>
             </div>
 
+            {error && (
+                <div style={{ padding: 'var(--space-3) var(--space-4)', marginBottom: 'var(--space-4)', background: 'var(--accent-red-dim)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 'var(--radius-sm)', color: 'var(--accent-red)', fontSize: '0.85rem', display: 'flex', justifyContent: 'space-between' }}>
+                    {error} <button onClick={() => setError(null)} style={{ background: 'none', border: 'none', color: 'var(--accent-red)', cursor: 'pointer' }}>✕</button>
+                </div>
+            )}
+
             {showForm && (
-                <div className="dash-panel" style={{ marginBottom: 'var(--space-6)' }}>
-                    <h3 style={{ marginBottom: 'var(--space-4)' }}>Create DSR Request</h3>
+                <div className="dash-panel" style={{ borderLeft: '4px solid var(--accent-amber)', marginBottom: 'var(--space-6)' }}>
+                    <h3 style={{ marginBottom: 'var(--space-4)' }}>Log New DSR Request</h3>
                     <form onSubmit={handleCreate} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
                         <input placeholder="Subject Name" value={form.subject_name} onChange={(e) => setForm({ ...form, subject_name: e.target.value })} required
                             style={{ padding: 'var(--space-3)', background: 'var(--bg-tertiary)', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-sm)', color: 'var(--text-primary)', fontFamily: 'inherit' }} />
@@ -61,7 +84,7 @@ export default function DSRManager() {
                             <option>High</option><option>Medium</option><option>Low</option>
                         </select>
                         <div style={{ gridColumn: '1 / -1', display: 'flex', gap: 'var(--space-3)' }}>
-                            <button type="submit" className="btn btn-primary">Create Request</button>
+                            <button type="submit" className="btn btn-primary" disabled={creating}>{creating ? 'Creating...' : 'Create Request'}</button>
                             <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>Cancel</button>
                         </div>
                     </form>
@@ -78,30 +101,31 @@ export default function DSRManager() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
                 {requests.map((dsr) => (
                     <div key={dsr.id} className="dash-panel" style={{ marginBottom: 0 }}>
-                        <div className="flex justify-between items-center" style={{ marginBottom: 'var(--space-4)' }}>
-                            <div className="flex items-center gap-4">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-4)', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
                                 <span style={{ fontWeight: 700, color: 'var(--accent-cyan)', fontSize: '0.95rem' }}>{dsr.request_id}</span>
                                 <span className={`badge ${typeBadge(dsr.type)}`}>{dsr.type}</span>
-                                {dsr.priority === 'High' && <span className="badge badge-red">⚡ High Priority</span>}
+                                {dsr.priority === 'High' && <span className="badge badge-red">⚡ High</span>}
                             </div>
-                            <div className="flex items-center gap-3">
-                                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Deadline: {dsr.deadline}</span>
-                                <span className={`badge ${dsr.status === 'completed' ? 'badge-green' : dsr.status === 'in-progress' ? 'badge-amber' : 'badge-cyan'}`}>{statusLabel(dsr.status)}</span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                                <select value={dsr.status} onChange={(e) => handleUpdateStatus(dsr.id, e.target.value)}
+                                    style={{ padding: '4px 8px', background: 'var(--bg-tertiary)', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-sm)', color: 'var(--text-primary)', fontFamily: 'inherit', fontSize: '0.8rem' }}>
+                                    <option value="pending">Pending</option>
+                                    <option value="in-progress">In Progress</option>
+                                    <option value="completed">Completed</option>
+                                </select>
+                                <button className="btn btn-ghost" onClick={() => handleDelete(dsr.id)} style={{ color: 'var(--accent-red)', fontSize: '0.8rem' }} title="Delete">✕</button>
                             </div>
                         </div>
-                        <div className="grid-3" style={{ marginBottom: 'var(--space-4)' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--space-4)', marginBottom: 'var(--space-4)' }}>
                             <div>
                                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 2 }}>Data Subject</div>
                                 <div style={{ fontSize: '0.9rem', fontWeight: 500 }}>{dsr.subject_name}</div>
                                 <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{dsr.subject_email}</div>
                             </div>
                             <div>
-                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 2 }}>Data Locations</div>
-                                <div className="flex gap-2" style={{ flexWrap: 'wrap' }}>
-                                    {(dsr.locations || []).map((loc, i) => (
-                                        <span key={i} className="badge badge-violet" style={{ fontSize: '0.7rem' }}>{loc}</span>
-                                    ))}
-                                </div>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 2 }}>Deadline</div>
+                                <div style={{ fontSize: '0.9rem' }}>{dsr.deadline}</div>
                             </div>
                             <div>
                                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 2 }}>Submitted</div>
@@ -109,8 +133,8 @@ export default function DSRManager() {
                             </div>
                         </div>
                         <div>
-                            <div className="flex justify-between" style={{ marginBottom: 'var(--space-1)' }}>
-                                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Fulfillment Progress</span>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-1)' }}>
+                                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Progress</span>
                                 <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-primary)' }}>{dsr.progress}%</span>
                             </div>
                             <div className="progress-bar">
@@ -119,6 +143,12 @@ export default function DSRManager() {
                         </div>
                     </div>
                 ))}
+                {requests.length === 0 && (
+                    <div className="dash-panel" style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
+                        <p style={{ fontSize: '1.5rem', marginBottom: 'var(--space-2)' }}>📋</p>
+                        <p>No DSR requests yet. Click "Log New Request" to create one.</p>
+                    </div>
+                )}
             </div>
         </div>
     )
