@@ -1,4 +1,4 @@
-const API_BASE = 'http://34.180.3.95/api'
+const API_BASE = '/api'
 
 function getHeaders() {
     const headers = { 'Content-Type': 'application/json' }
