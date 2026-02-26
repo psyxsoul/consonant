@@ -22,11 +22,11 @@ export default function Navbar() {
                     <a href="#features">Features</a>
                     <a href="#dpdpa">DPDPA</a>
                     <a href="#how-it-works">How It Works</a>
-                    <Link to="/dashboard">Dashboard</Link>
+                    <Link to="/auth">Dashboard</Link>
                 </div>
 
                 <div className="navbar-actions">
-                    <Link to="/dashboard" className="btn btn-primary">
+                    <Link to="/auth" className="btn btn-primary">
                         Get Started →
                     </Link>
                 </div>

@@ -73,7 +73,7 @@ export default function Landing() {
                     </p>
 
                     <div className="hero-actions">
-                        <Link to="/dashboard" className="btn btn-primary">
+                        <Link to="/auth" className="btn btn-primary">
                             Launch Dashboard →
                         </Link>
                         <a href="#features" className="btn btn-secondary">
@@ -210,7 +210,7 @@ export default function Landing() {
                         <h2>Ready to <span className="text-gradient">Transform</span> Your Privacy Posture?</h2>
                         <p>Join the next generation of privacy-conscious organizations. Start detecting, mapping, and protecting in minutes.</p>
                         <div className="flex justify-center gap-4">
-                            <Link to="/dashboard" className="btn btn-primary">
+                            <Link to="/auth" className="btn btn-primary">
                                 Start Free Trial →
                             </Link>
                             <button className="btn btn-secondary">
