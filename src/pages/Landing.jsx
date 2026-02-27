@@ -129,9 +129,9 @@ export default function Landing() {
                         <p style={{ maxWidth: '600px', margin: '0 auto', color: 'var(--text-secondary)' }}>Most platforms merely detect and report. Consonant detects, maps, and actively protects — powered by Gemini AI.</p>
                     </div>
 
-                    <div className="grid-3">
+                    <div className="grid-3 pillars-container">
                         {pillars.map((p, i) => (
-                            <PillarCard key={i} {...p} />
+                            <PillarCard key={i} index={i} {...p} />
                         ))}
                     </div>
                 </div>
