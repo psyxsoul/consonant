@@ -9,8 +9,6 @@ export default function Guardrails() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const [toggling, setToggling] = useState(null)
-
-    // AI Risk Assessment
     const [showAI, setShowAI] = useState(false)
     const [aiInput, setAiInput] = useState('')
     const [aiResult, setAiResult] = useState(null)
@@ -27,18 +25,14 @@ export default function Guardrails() {
 
     const handleToggle = async (id) => {
         setToggling(id)
-        try {
-            await api.toggleGuardrail(id)
-            load()
-        } catch (err) { setError(err.message) }
+        try { await api.toggleGuardrail(id); load() }
+        catch (err) { setError(err.message) }
         finally { setToggling(null) }
     }
 
     const handleRiskAssessment = async (e) => {
-        e.preventDefault()
-        if (!aiInput.trim()) return
-        setAiLoading(true)
-        setAiResult(null)
+        e.preventDefault(); if (!aiInput.trim()) return
+        setAiLoading(true); setAiResult(null)
         try {
             const result = await api.riskAssessment({ system_description: aiInput })
             setAiResult(result)
@@ -46,146 +40,122 @@ export default function Guardrails() {
         finally { setAiLoading(false) }
     }
 
-    if (loading) return (
-        <div className="flex-col items-center justify-center animate-fade-in" style={{ height: '60vh', color: 'var(--text-muted)' }}>
-            <div className="text-center">
-                <div style={{ width: '40px', height: '40px', border: '3px solid var(--accent-green-dim)', borderTopColor: 'var(--accent-green)', borderRadius: '50%', animation: 'rotate 1s linear infinite', margin: '0 auto 16px' }} />
-                <span>Loading Guardrails...</span>
-            </div>
-        </div>
-    )
+    if (loading) return <div className="dash-loading"><div className="spinner" /><span>Loading Guardrails...</span></div>
 
     return (
-        <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            <div className="page-header flex justify-between items-end mb-8">
+        <div className="animate-fade-in">
+            <div className="page-header mb-8">
                 <div>
-                    <h1 style={{ fontSize: '2.5rem', marginBottom: '8px' }}>Active Guardrails</h1>
-                    <p style={{ color: 'var(--text-secondary)' }}>Toggle defenses, view AI proxy logs, and run risk assessments</p>
+                    <h1>Active Guardrails</h1>
+                    <p>Toggle defenses, view proxy logs, and run risk assessments</p>
                 </div>
-                <button className="btn btn-primary" onClick={() => setShowAI(!showAI)}>🧠 AI Risk Assessment</button>
+                <button className="btn btn-primary" onClick={() => setShowAI(!showAI)}>🧠 AI Assessment</button>
             </div>
 
-            {error && (
-                <div className="p-4 mb-6 flex justify-between items-center" style={{ background: 'var(--accent-red-dim)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 'var(--radius-md)', color: 'var(--accent-red)', fontSize: '0.9rem' }}>
-                    {error} <button onClick={() => setError(null)} style={{ background: 'none', border: 'none', color: 'var(--accent-red)', cursor: 'pointer', fontSize: '1.2rem' }}>✕</button>
-                </div>
-            )}
+            {error && <div className="error-banner mb-6">{error}<button onClick={() => setError(null)}>✕</button></div>}
 
-            {/* ===== AI RISK ASSESSMENT ===== */}
             {showAI && (
-                <div className="glass-card mb-8 animate-fade-in" style={{ borderLeft: '4px solid var(--accent-violet)' }}>
-                    <div className="mb-4">
-                        <h3 style={{ fontSize: '1.2rem' }}>🧠 AI Risk Assessment</h3>
+                <div className="card card-highlight-violet mb-6 animate-fade-in">
+                    <div className="card-header"><h3>🧠 AI Risk Assessment</h3></div>
+                    <div className="card-body">
+                        <p className="text-secondary mb-4" style={{ fontSize: '0.85rem' }}>Describe your system and Gemini AI will assess privacy risks.</p>
+                        <form onSubmit={handleRiskAssessment}>
+                            <textarea className="form-textarea" value={aiInput} onChange={(e) => setAiInput(e.target.value)}
+                                placeholder="Describe your data processing system..." rows={4} required />
+                            <button type="submit" className="btn btn-primary mt-4" disabled={aiLoading}>
+                                {aiLoading ? '🔄 Analyzing...' : '🚀 Run Assessment'}
+                            </button>
+                        </form>
+                        {aiResult && <div className="ai-output mt-4">{aiResult.assessment || aiResult.content || JSON.stringify(aiResult, null, 2)}</div>}
                     </div>
-                    <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: 'var(--space-6)' }}>Describe your system/data flow and Gemini AI will assess privacy risks and recommend guardrails.</p>
-                    <form onSubmit={handleRiskAssessment}>
-                        <textarea className="form-textarea" value={aiInput} onChange={(e) => setAiInput(e.target.value)}
-                            placeholder="Example: We have a PostgreSQL database storing customer PII including Aadhaar numbers. Employees use ChatGPT for customer support and sometimes paste customer data into prompts. Data is backed up to S3 without encryption."
-                            rows={4} required
-                            style={{ fontSize: '0.9rem' }} />
-                        <button type="submit" className="btn btn-primary mt-4" disabled={aiLoading}>
-                            {aiLoading ? '🔄 Analyzing with Gemini...' : '🚀 Run Assessment'}
-                        </button>
-                    </form>
-                    {aiResult && (
-                        <div className="mt-6 p-4" style={{ background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-md)', whiteSpace: 'pre-wrap', fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6, border: '1px solid var(--border-default)' }}>
-                            {aiResult.assessment || aiResult.content || JSON.stringify(aiResult, null, 2)}
-                        </div>
-                    )}
                 </div>
             )}
 
-            {/* ===== STATS ===== */}
-            <div className="grid-4 mb-8">
-                <div className="glass-card text-center" style={{ padding: 'var(--space-6)' }}>
-                    <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1 }}>{stats.total || 0}</div>
-                    <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '8px', fontWeight: 600 }}>Total Guardrails</div>
-                </div>
-                <div className="glass-card text-center" style={{ padding: 'var(--space-6)' }}>
-                    <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--accent-green)', lineHeight: 1 }}>{stats.active || 0}</div>
-                    <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '8px', fontWeight: 600 }}>Active Defenses</div>
-                </div>
-                <div className="glass-card text-center" style={{ padding: 'var(--space-6)' }}>
-                    <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--accent-cyan)', lineHeight: 1 }}>{stats.totalRedacted || 0}</div>
-                    <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '8px', fontWeight: 600 }}>Fields Redacted</div>
-                </div>
-                <div className="glass-card text-center" style={{ padding: 'var(--space-6)' }}>
-                    <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--accent-violet)', lineHeight: 1 }}>{stats.vaultCount || 0}</div>
-                    <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '8px', fontWeight: 600 }}>Privacy Vaults</div>
-                </div>
+            <div className="kpi-grid mb-6">
+                {[
+                    { label: 'Total Guardrails', value: stats.total || 0 },
+                    { label: 'Active', value: stats.active || 0, color: 'var(--accent-green)' },
+                    { label: 'Fields Redacted', value: stats.totalRedacted || 0, color: 'var(--accent-cyan)' },
+                    { label: 'Privacy Vaults', value: stats.vaultCount || 0, color: 'var(--accent-violet)' },
+                ].map((s, i) => (
+                    <div key={i} className="kpi-card"><div className="kpi-top"><span className="kpi-label">{s.label}</span></div><div className="kpi-value" style={s.color ? { color: s.color } : undefined}>{s.value}</div></div>
+                ))}
             </div>
 
-            <div className="grid-2" style={{ gap: 'var(--space-6)', alignItems: 'start' }}>
-                <div className="flex-col gap-6">
-                    <div className="glass-card">
-                        <div className="flex justify-between items-center mb-6">
-                            <h3 style={{ fontSize: '1.2rem' }}>Defense Configuration</h3>
-                            <span className="badge badge-green">● Live</span>
-                        </div>
+            <div className="dash-grid-2">
+                {/* Defense Config */}
+                <div className="card">
+                    <div className="card-header">
+                        <h3>Defenses</h3>
+                        <span className="status-dot green">Live</span>
+                    </div>
+                    <div className="card-body guardrail-list">
                         {guardrails.map((g) => (
-                            <div className="flex items-center gap-4 p-4 mb-4" key={g.id} style={{ background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-default)' }}>
-                                <div className={`guardrail-status ${g.is_active ? 'active' : 'inactive'}`} />
-                                <div className="flex-col" style={{ flex: 1 }}>
-                                    <h4 style={{ fontSize: '1rem', color: 'var(--text-primary)', marginBottom: 4 }}>{g.name}</h4>
-                                    <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.4, marginBottom: 6 }}>{g.description}</p>
-                                    <div><span className="badge badge-violet">{g.category}</span></div>
+                            <div className="guardrail-item" key={g.id}>
+                                <div className={`guardrail-dot ${g.is_active ? 'on' : ''}`} />
+                                <div className="guardrail-info">
+                                    <h4>{g.name}</h4>
+                                    <p>{g.description}</p>
+                                    <span className="badge badge-violet">{g.category}</span>
                                 </div>
                                 <div
-                                    className={`guardrail-toggle ${g.is_active ? 'on' : ''}`}
+                                    className={`toggle ${g.is_active ? 'on' : ''}`}
                                     onClick={() => handleToggle(g.id)}
-                                    style={{ cursor: toggling === g.id ? 'wait' : 'pointer', opacity: toggling === g.id ? 0.5 : 1, width: 44, height: 24, borderRadius: 12, background: g.is_active ? 'var(--accent-green)' : 'var(--bg-secondary)', position: 'relative', transition: 'background 0.3s ease', border: '1px solid var(--border-subtle)' }}
-                                    title={g.is_active ? 'Click to deactivate' : 'Click to activate'}
+                                    style={{ opacity: toggling === g.id ? 0.5 : 1 }}
                                 >
-                                    <div style={{ position: 'absolute', top: 2, left: g.is_active ? 22 : 2, width: 18, height: 18, borderRadius: '50%', background: 'var(--text-primary)', transition: 'left 0.3s ease', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
+                                    <div className="toggle-knob" />
                                 </div>
                             </div>
                         ))}
-                        {guardrails.length === 0 && <p className="text-center p-6" style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>No guardrails configured.</p>}
+                        {guardrails.length === 0 && <p className="text-muted text-center p-6">No guardrails configured.</p>}
                     </div>
                 </div>
 
-                <div className="flex-col gap-6">
-                    <div className="glass-card">
-                        <div className="flex justify-between items-center mb-6">
-                            <h3 style={{ fontSize: '1.2rem' }}>AI Proxy Redaction Log</h3>
-                            <span className="badge badge-green">● Live</span>
+                {/* Right column */}
+                <div className="dash-right-col">
+                    {/* Proxy Log */}
+                    <div className="card">
+                        <div className="card-header">
+                            <h3>AI Proxy Log</h3>
+                            <span className="status-dot green">Live</span>
                         </div>
-                        <div className="flex-col gap-4">
+                        <div className="card-body proxy-list">
                             {proxyLog.map((entry, i) => (
-                                <div className="flex items-start gap-4 p-4" key={entry.id || i} style={{ background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-default)' }}>
-                                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--accent-cyan)', marginTop: 8, boxShadow: '0 0 8px var(--accent-cyan)' }} />
-                                    <div className="flex-col" style={{ flex: 1 }}>
-                                        <div style={{ fontSize: '0.9rem', color: 'var(--text-primary)', marginBottom: 6 }}>
-                                            <strong style={{ color: 'var(--accent-cyan)' }}>{entry.user_name}</strong> → {entry.model}
-                                            <span style={{ marginLeft: 8 }} className="badge badge-red">{entry.fields_redacted} redacted</span>
+                                <div className="proxy-item" key={entry.id || i}>
+                                    <div className="proxy-dot" />
+                                    <div className="proxy-info">
+                                        <div className="proxy-header">
+                                            <strong className="text-cyan">{entry.user_name}</strong> → {entry.model}
+                                            <span className="badge badge-red ml-auto">{entry.fields_redacted} redacted</span>
                                         </div>
-                                        <div className="flex flex-wrap gap-2 mb-2">
+                                        <div className="proxy-types">
                                             {(typeof entry.redacted_types === 'string' ? JSON.parse(entry.redacted_types) : entry.redacted_types || []).map((t, j) => (
                                                 <span key={j} className="badge badge-cyan">{t}</span>
                                             ))}
                                         </div>
-                                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{entry.time}</div>
+                                        <span className="proxy-time">{entry.time}</span>
                                     </div>
                                 </div>
                             ))}
-                            {proxyLog.length === 0 && <p className="text-center p-6" style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>No proxy activity yet.</p>}
+                            {proxyLog.length === 0 && <p className="text-muted text-center p-6">No proxy activity.</p>}
                         </div>
                     </div>
 
-                    <div className="glass-card">
-                        <h3 className="mb-6" style={{ fontSize: '1.2rem' }}>Privacy Vaults</h3>
-                        <div className="flex-col gap-4">
+                    {/* Vaults */}
+                    <div className="card">
+                        <div className="card-header"><h3>Privacy Vaults</h3></div>
+                        <div className="card-body vault-list">
                             {vaults.map((v) => (
-                                <div className="flex items-center gap-4 p-4" key={v.id} style={{ background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-default)' }}>
-                                    <div className="flex-center" style={{ width: 44, height: 44, borderRadius: 'var(--radius-md)', background: 'var(--accent-violet-dim)', fontSize: '1.2rem', border: '1px solid rgba(139, 92, 246, 0.2)' }}>🔒</div>
-                                    <div className="flex-col" style={{ flex: 1 }}>
-                                        <h4 style={{ fontSize: '1rem', color: 'var(--text-primary)', marginBottom: 4 }}>{v.name}</h4>
-                                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{v.records?.toLocaleString()} records · {v.size} · Last: {v.last_access}</p>
+                                <div className="vault-item" key={v.id}>
+                                    <div className="vault-icon">🔒</div>
+                                    <div className="vault-info">
+                                        <h4>{v.name}</h4>
+                                        <p>{v.records?.toLocaleString()} records · {v.size} · Last: {v.last_access}</p>
                                     </div>
                                     <span className="badge badge-green">🔐 Encrypted</span>
                                 </div>
                             ))}
-                            {vaults.length === 0 && <p className="text-center p-6" style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>No vaults configured.</p>}
+                            {vaults.length === 0 && <p className="text-muted text-center p-6">No vaults configured.</p>}
                         </div>
                     </div>
                 </div>

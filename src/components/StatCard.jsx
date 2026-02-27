@@ -1,18 +1,19 @@
-export default function StatCard({ icon, iconBg, value, label, trend, trendDir }) {
+export default function StatCard({ icon, value, label, trend, color }) {
+    const isPositive = trend && (trend.startsWith('+') || trend.startsWith('-'))
+    const trendUp = trend && trend.startsWith('+')
+
     return (
-        <div className="stat-card">
-            <div className="stat-card-header">
-                <div className="stat-card-icon" style={{ background: iconBg }}>
-                    {icon}
-                </div>
+        <div className="kpi-card">
+            <div className="kpi-top">
+                <span className="kpi-label">{label}</span>
                 {trend && (
-                    <span className={`stat-card-trend ${trendDir}`}>
-                        {trendDir === 'up' ? '↑' : '↓'} {trend}
+                    <span className={`kpi-trend ${trendUp ? 'up' : 'down'}`}>
+                        {trendUp ? '↑' : '↓'} {trend}
                     </span>
                 )}
             </div>
-            <div className="stat-card-value">{value}</div>
-            <div className="stat-card-label">{label}</div>
+            <div className="kpi-value" style={color ? { color } : undefined}>{value}</div>
+            <div className="kpi-icon">{icon}</div>
         </div>
     )
 }

@@ -18,7 +18,7 @@ export default function Discovery() {
     const load = () => {
         Promise.all([api.getDiscoveryResults(), api.getDiscoveryStats()])
             .then(([r, s]) => { setResults(r); setStats(s) })
-            .catch(err => { console.error(err); setError(err.message) })
+            .catch(err => setError(err.message))
             .finally(() => setLoading(false))
     }
 
@@ -27,22 +27,14 @@ export default function Discovery() {
     const handleScan = async (e) => {
         e.preventDefault()
         if (!scanInput.trim()) return
-        setScanning(true)
-        setScanResult(null)
-        setError(null)
+        setScanning(true); setScanResult(null); setError(null)
         try {
             const result = await api.runScan({ schema: scanInput })
-            setScanResult(result)
-            setScanInput('')
-            load() // reload results
-        } catch (err) {
-            setError(err.message)
-        } finally {
-            setScanning(false)
-        }
+            setScanResult(result); setScanInput(''); load()
+        } catch (err) { setError(err.message) }
+        finally { setScanning(false) }
     }
 
-    // Pre-fill sample schema for demo
     const sampleSchema = `CREATE TABLE customers (
   id SERIAL PRIMARY KEY,
   full_name VARCHAR(100),
@@ -52,165 +44,129 @@ export default function Discovery() {
   pan_card VARCHAR(10),
   date_of_birth DATE,
   address TEXT,
-  ip_address INET,
-  device_fingerprint TEXT,
-  credit_card_number VARCHAR(19),
-  bank_account VARCHAR(20)
+  ip_address INET
 );`
 
-    if (loading) return (
-        <div className="flex-col items-center justify-center animate-fade-in" style={{ height: '60vh', color: 'var(--text-muted)' }}>
-            <div className="text-center">
-                <div style={{ width: '40px', height: '40px', border: '3px solid var(--accent-cyan-dim)', borderTopColor: 'var(--accent-cyan)', borderRadius: '50%', animation: 'rotate 1s linear infinite', margin: '0 auto 16px' }} />
-                <span>Loading discovery data...</span>
-            </div>
-        </div>
-    )
+    if (loading) return <div className="dash-loading"><div className="spinner" /><span>Loading discovery data...</span></div>
 
     return (
-        <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            <div className="page-header flex justify-between items-end mb-8">
+        <div className="animate-fade-in">
+            <div className="page-header mb-8">
                 <div>
-                    <h1 style={{ fontSize: '2.5rem', marginBottom: '8px' }}>Semantic Discovery</h1>
-                    <p style={{ color: 'var(--text-secondary)' }}>AI-powered PII detection with Gemini 2.5 Flash — paste any schema or text below</p>
+                    <h1>Semantic Discovery</h1>
+                    <p>AI-powered PII detection with Gemini 2.5 Flash</p>
                 </div>
-                <span className="badge badge-green">● AI Engine Active</span>
+                <span className="status-dot green">AI Engine Active</span>
             </div>
 
-            {/* ===== AI SCAN FORM — PROMINENT ===== */}
-            <div className="glass-card mb-8" style={{ borderLeft: '4px solid var(--accent-cyan)', padding: 'var(--space-6)' }}>
-                <div className="flex justify-between items-center mb-4">
-                    <h3 style={{ fontSize: '1.2rem' }}>🧠 AI-Powered PII Scan</h3>
-                    <button className="btn btn-ghost" onClick={() => setScanInput(sampleSchema)} style={{ fontSize: '0.8rem' }}>Load Sample Schema</button>
+            {/* AI Scan Form */}
+            <div className="card card-highlight-cyan mb-6">
+                <div className="card-header">
+                    <h3>🧠 AI-Powered PII Scan</h3>
+                    <button className="btn-text" onClick={() => setScanInput(sampleSchema)}>Load Sample</button>
                 </div>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: 'var(--space-6)' }}>
-                    Paste your database schema, CSV headers, API payload, or any text — Gemini AI will analyze it for PII, linkability risks, and DPDPA compliance issues.
-                </p>
-                <form onSubmit={handleScan}>
-                    <textarea
-                        className="form-textarea"
-                        value={scanInput}
-                        onChange={(e) => setScanInput(e.target.value)}
-                        placeholder={`Paste any data structure here...\n\nExamples:\n• SQL schema: CREATE TABLE users (name VARCHAR, aadhaar VARCHAR...)\n• CSV headers: name, email, phone, pan_number, dob\n• JSON: {"customer": {"name": "...", "aadhaar": "..."}}\n• Plain text: We store customer Aadhaar numbers alongside their email addresses`}
-                        rows={6}
-                        required
-                        style={{ fontFamily: 'monospace', fontSize: '0.9rem' }}
-                    />
-                    <div className="flex items-center gap-4 mt-6">
-                        <button type="submit" className="btn btn-primary" disabled={scanning || !scanInput.trim()}>
-                            {scanning ? '🔄 Analyzing with Gemini AI...' : '🚀 Run AI Scan'}
-                        </button>
-                        {scanning && <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>This may take a few seconds...</span>}
-                    </div>
-                </form>
+                <div className="card-body">
+                    <p className="text-secondary mb-4" style={{ fontSize: '0.85rem' }}>
+                        Paste your schema, CSV headers, or any text — Gemini AI analyzes for PII and compliance risks.
+                    </p>
+                    <form onSubmit={handleScan}>
+                        <textarea className="form-textarea mono" value={scanInput} onChange={(e) => setScanInput(e.target.value)}
+                            placeholder="Paste any data structure here..." rows={5} required />
+                        <div className="flex items-center gap-4 mt-4">
+                            <button type="submit" className="btn btn-primary" disabled={scanning || !scanInput.trim()}>
+                                {scanning ? '🔄 Analyzing...' : '🚀 Run AI Scan'}
+                            </button>
+                            {scanning && <span className="text-muted" style={{ fontSize: '0.8rem' }}>This may take a few seconds...</span>}
+                        </div>
+                    </form>
+                </div>
             </div>
 
-            {/* ===== SCAN RESULT ===== */}
+            {/* Scan Result */}
             {scanResult && (
-                <div className="glass-card mb-8 animate-fade-in" style={{ borderLeft: '4px solid var(--accent-green)', padding: 'var(--space-6)' }}>
-                    <div className="flex justify-between items-center mb-6">
-                        <h3 style={{ fontSize: '1.2rem' }}>✅ Scan Complete — {scanResult.findings_count || 0} findings</h3>
-                        <button className="btn btn-ghost" onClick={() => setScanResult(null)}>Dismiss</button>
+                <div className="card card-highlight-green mb-6 animate-fade-in">
+                    <div className="card-header">
+                        <h3>✅ Scan Complete — {scanResult.findings_count || 0} findings</h3>
+                        <button className="btn-text" onClick={() => setScanResult(null)}>Dismiss</button>
                     </div>
-                    {scanResult.results && scanResult.results.length > 0 && (
-                        <div className="flex-col">
-                            {scanResult.results.map((r, i) => (
-                                <div key={i} className="flex items-center gap-4 p-4" style={{
-                                    borderBottom: i < scanResult.results.length - 1 ? '1px solid var(--border-subtle)' : 'none'
-                                }}>
-                                    <span className={`badge ${severityBadge(r.severity)}`}>{r.severity}</span>
-                                    <span style={{ fontFamily: 'monospace', fontSize: '0.85rem', color: 'var(--accent-cyan)' }}>{r.field_name}</span>
-                                    <span style={{ color: 'var(--text-primary)', fontWeight: 500 }}>{r.pii_type}</span>
-                                    <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginLeft: 'auto' }}>{r.confidence}% confident</span>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                    {scanResult.ai_analysis && (
-                        <div className="mt-6 p-4" style={{ background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-md)', whiteSpace: 'pre-wrap', fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6, border: '1px solid var(--border-default)' }}>
-                            {scanResult.ai_analysis}
-                        </div>
-                    )}
+                    <div className="card-body p-0">
+                        {scanResult.results?.map((r, i) => (
+                            <div key={i} className="flex items-center gap-4 p-4 border-b">
+                                <span className={`badge ${severityBadge(r.severity)}`}>{r.severity}</span>
+                                <code className="text-cyan">{r.field_name}</code>
+                                <span style={{ fontWeight: 500 }}>{r.pii_type}</span>
+                                <span className="text-muted ml-auto" style={{ fontSize: '0.8rem' }}>{r.confidence}%</span>
+                            </div>
+                        ))}
+                        {scanResult.ai_analysis && (
+                            <div className="ai-output">{scanResult.ai_analysis}</div>
+                        )}
+                    </div>
                 </div>
             )}
 
-            {error && (
-                <div className="p-4 mb-6" style={{ background: 'var(--accent-red-dim)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 'var(--radius-md)', color: 'var(--accent-red)', fontSize: '0.9rem' }}>
-                    Error: {error}
-                </div>
-            )}
+            {error && <div className="error-banner mb-6">{error}<button onClick={() => setError(null)}>✕</button></div>}
 
-            {/* ===== STATS ===== */}
-            <div className="grid-4 mb-8">
-                <div className="glass-card text-center" style={{ padding: 'var(--space-6)' }}>
-                    <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🔴</div>
-                    <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--accent-red)', lineHeight: 1 }}>{stats.critical || 0}</div>
-                    <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '8px', fontWeight: 600 }}>Critical Findings</div>
-                </div>
-                <div className="glass-card text-center" style={{ padding: 'var(--space-6)' }}>
-                    <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🟠</div>
-                    <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--accent-amber)', lineHeight: 1 }}>{stats.high || 0}</div>
-                    <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '8px', fontWeight: 600 }}>High Risk</div>
-                </div>
-                <div className="glass-card text-center" style={{ padding: 'var(--space-6)' }}>
-                    <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🔵</div>
-                    <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--accent-cyan)', lineHeight: 1 }}>{stats.medium || 0}</div>
-                    <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '8px', fontWeight: 600 }}>Medium Risk</div>
-                </div>
-                <div className="glass-card text-center" style={{ padding: 'var(--space-6)' }}>
-                    <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🟢</div>
-                    <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--accent-green)', lineHeight: 1 }}>{stats.low || 0}</div>
-                    <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '8px', fontWeight: 600 }}>Low Risk</div>
-                </div>
+            {/* Risk Stats */}
+            <div className="kpi-grid mb-6">
+                {[
+                    { label: 'Critical', value: stats.critical || 0, color: 'var(--accent-red)', icon: '🔴' },
+                    { label: 'High Risk', value: stats.high || 0, color: 'var(--accent-amber)', icon: '🟠' },
+                    { label: 'Medium', value: stats.medium || 0, color: 'var(--accent-cyan)', icon: '🔵' },
+                    { label: 'Low Risk', value: stats.low || 0, color: 'var(--accent-green)', icon: '🟢' },
+                ].map((s, i) => (
+                    <div key={i} className="kpi-card">
+                        <div className="kpi-top"><span className="kpi-label">{s.label}</span></div>
+                        <div className="kpi-value" style={{ color: s.color }}>{s.value}</div>
+                        <div className="kpi-icon">{s.icon}</div>
+                    </div>
+                ))}
             </div>
 
-            {/* ===== RISK METER ===== */}
+            {/* Risk Distribution */}
             {(stats.total || 0) > 0 && (
-                <div className="glass-card mb-8">
-                    <div className="flex justify-between items-center mb-6">
-                        <h3 style={{ fontSize: '1.1rem' }}>Risk Distribution</h3>
-                        <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>{stats.total} total findings</span>
+                <div className="card mb-6">
+                    <div className="card-header">
+                        <h3>Risk Distribution</h3>
+                        <span className="text-muted" style={{ fontSize: '0.8rem' }}>{stats.total} total</span>
                     </div>
-                    <div style={{ height: 16, borderRadius: 8, display: 'flex', overflow: 'hidden', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)' }}>
-                        {stats.critical > 0 && <div style={{ flex: stats.critical, background: 'var(--accent-red)', transition: 'all 0.5s ease' }} title={`Critical: ${stats.critical}`} />}
-                        {stats.high > 0 && <div style={{ flex: stats.high, background: 'var(--accent-amber)', transition: 'all 0.5s ease' }} title={`High: ${stats.high}`} />}
-                        {stats.medium > 0 && <div style={{ flex: stats.medium, background: 'var(--accent-cyan)', transition: 'all 0.5s ease' }} title={`Medium: ${stats.medium}`} />}
-                        {stats.low > 0 && <div style={{ flex: stats.low, background: 'var(--accent-green)', transition: 'all 0.5s ease' }} title={`Low: ${stats.low}`} />}
+                    <div className="card-body">
+                        <div className="risk-bar">
+                            {stats.critical > 0 && <div style={{ flex: stats.critical, background: 'var(--accent-red)' }} />}
+                            {stats.high > 0 && <div style={{ flex: stats.high, background: 'var(--accent-amber)' }} />}
+                            {stats.medium > 0 && <div style={{ flex: stats.medium, background: 'var(--accent-cyan)' }} />}
+                            {stats.low > 0 && <div style={{ flex: stats.low, background: 'var(--accent-green)' }} />}
+                        </div>
                     </div>
                 </div>
             )}
 
-            {/* ===== RESULTS TABLE ===== */}
-            <div className="glass-card p-0" style={{ overflow: 'hidden' }}>
-                <div className="flex justify-between items-center p-6 border-b border-default" style={{ borderBottom: '1px solid var(--border-default)' }}>
-                    <h3 style={{ fontSize: '1.2rem' }}>All Scan Results</h3>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{results.length} findings</span>
+            {/* Results Table */}
+            <div className="card">
+                <div className="card-header">
+                    <h3>All Scan Results</h3>
+                    <span className="text-muted" style={{ fontSize: '0.8rem' }}>{results.length} findings</span>
                 </div>
                 {results.length > 0 ? (
-                    <div className="table-container" style={{ border: 'none', borderRadius: 0 }}>
+                    <div className="table-wrap">
                         <table className="data-table">
-                            <thead>
-                                <tr><th>Field / Location</th><th>PII Type</th><th>Source</th><th>Confidence</th><th>Severity</th><th>Context</th></tr>
-                            </thead>
+                            <thead><tr><th>Field</th><th>PII Type</th><th>Source</th><th>Confidence</th><th>Severity</th><th>Context</th></tr></thead>
                             <tbody>
                                 {results.map((r) => (
                                     <tr key={r.id}>
-                                        <td style={{ fontFamily: 'monospace', fontSize: '0.85rem', color: 'var(--accent-cyan)' }}>{r.field_name}</td>
-                                        <td style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{r.pii_type}</td>
-                                        <td style={{ fontSize: '0.85rem' }}>{r.source}</td>
+                                        <td><code className="text-cyan">{r.field_name}</code></td>
+                                        <td style={{ fontWeight: 500 }}>{r.pii_type}</td>
+                                        <td>{r.source}</td>
                                         <td style={{ fontWeight: 600 }}>{r.confidence}%</td>
                                         <td><span className={`badge ${severityBadge(r.severity)}`}>{r.severity}</span></td>
-                                        <td style={{ fontSize: '0.85rem', maxWidth: 300, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={r.context}>{r.context}</td>
+                                        <td className="cell-truncate" title={r.context}>{r.context}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     </div>
                 ) : (
-                    <div className="p-10 text-center" style={{ color: 'var(--text-muted)' }}>
-                        <p style={{ fontSize: '2.5rem', marginBottom: '16px' }}>🔍</p>
-                        <p style={{ fontSize: '1.1rem' }}>No scan results yet. Use the AI scan form above to analyze your data.</p>
-                    </div>
+                    <div className="empty-state"><span className="empty-icon">🔍</span><p>No scan results yet. Use the AI scan form above.</p></div>
                 )}
             </div>
         </div>
