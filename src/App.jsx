@@ -38,11 +38,13 @@ function App() {
     return (
         <ThemeProvider>
             <AuthProvider>
-                <div className="spatial-bg" />
-                <div className="glow-orb glow-cyan" style={{ width: '600px', height: '600px', top: '-10%', right: '-5%' }} />
-                <div className="glow-orb glow-violet" style={{ width: '500px', height: '500px', bottom: '-10%', left: '-5%' }} />
-                <div style={{ position: 'relative', zIndex: 1, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-                    <AppRoutes />
+                <div style={{ position: 'relative', overflowX: 'hidden', minHeight: '100vh', width: '100%' }}>
+                    <div className="spatial-bg" />
+                    <div className="glow-orb glow-cyan" style={{ width: '600px', height: '600px', top: '-10%', right: '-5%' }} />
+                    <div className="glow-orb glow-violet" style={{ width: '500px', height: '500px', bottom: '-10%', left: '-5%' }} />
+                    <div style={{ position: 'relative', zIndex: 1, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+                        <AppRoutes />
+                    </div>
                 </div>
             </AuthProvider>
         </ThemeProvider>
