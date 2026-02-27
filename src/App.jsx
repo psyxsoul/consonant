@@ -10,11 +10,18 @@ import DataMap from './pages/DataMap'
 import Discovery from './pages/Discovery'
 import DSRManager from './pages/DSRManager'
 import Guardrails from './pages/Guardrails'
+import AuditLog from './pages/AuditLog'
 
 function ProtectedRoute({ children }) {
     const { isAuthenticated, loading } = useAuth()
     if (loading) return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', color: 'var(--text-muted)' }}>Loading...</div>
     return isAuthenticated ? children : <Navigate to="/auth" replace />
+}
+
+function AdminRoute({ children }) {
+    const { isAdmin, loading } = useAuth()
+    if (loading) return null
+    return isAdmin ? children : <Navigate to="/dashboard" replace />
 }
 
 function AppRoutes() {
@@ -29,6 +36,7 @@ function AppRoutes() {
                 <Route path="discovery" element={<Discovery />} />
                 <Route path="dsr" element={<DSRManager />} />
                 <Route path="guardrails" element={<Guardrails />} />
+                <Route path="audit" element={<AdminRoute><AuditLog /></AdminRoute>} />
             </Route>
         </Routes>
     )

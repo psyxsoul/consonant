@@ -30,6 +30,14 @@ export function AuthProvider({ children }) {
         return data
     }
 
+    const loginWithGoogle = async (credential) => {
+        const data = await api.googleAuth(credential)
+        localStorage.setItem('consonant_token', data.token)
+        setToken(data.token)
+        setUser(data.user)
+        return data
+    }
+
     const register = async (name, email, password, organization) => {
         const data = await api.register(name, email, password, organization)
         localStorage.setItem('consonant_token', data.token)
@@ -44,8 +52,18 @@ export function AuthProvider({ children }) {
         setUser(null)
     }
 
+    const isOwner = user?.role === 'owner'
+    const isAdmin = user?.role === 'admin' || isOwner
+    const isAnalyst = user?.role === 'analyst' || isAdmin
+    const canWrite = isAdmin
+    const canRead = !!user
+
     return (
-        <AuthContext.Provider value={{ user, token, loading, login, register, logout, isAuthenticated: !!token }}>
+        <AuthContext.Provider value={{
+            user, token, loading, login, loginWithGoogle, register, logout,
+            isAuthenticated: !!token,
+            isOwner, isAdmin, isAnalyst, canWrite, canRead
+        }}>
             {children}
         </AuthContext.Provider>
     )

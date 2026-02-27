@@ -27,7 +27,12 @@ const api = {
     // Auth
     login: (email, password) => request('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) }),
     register: (name, email, password, organization) => request('/auth/register', { method: 'POST', body: JSON.stringify({ name, email, password, organization }) }),
+    googleAuth: (credential) => request('/auth/google', { method: 'POST', body: JSON.stringify({ credential }) }),
     getMe: () => request('/auth/me'),
+
+    // Team Management
+    getTeam: () => request('/auth/users'),
+    updateUserRole: (id, role) => request(`/auth/users/${id}/role`, { method: 'PUT', body: JSON.stringify({ role }) }),
 
     // Dashboard
     getDashboardStats: () => request('/dashboard/stats'),
@@ -71,6 +76,14 @@ const api = {
     analyze: (text, context) => request('/ai/analyze', { method: 'POST', body: JSON.stringify({ text, context }) }),
     generateConsentNotice: (data) => request('/ai/consent-notice', { method: 'POST', body: JSON.stringify(data) }),
     riskAssessment: (data) => request('/ai/risk-assessment', { method: 'POST', body: JSON.stringify(data) }),
+
+    // Audit Trail
+    getAuditLog: (page = 1, limit = 50, filters = {}) => {
+        const params = new URLSearchParams({ page, limit, ...filters })
+        return request(`/audit?${params}`)
+    },
+    getAuditStats: () => request('/audit/stats'),
+    exportAuditLog: () => `${API_BASE}/audit/export?token=${localStorage.getItem('consonant_token')}`,
 
     // Health
     health: () => request('/health'),

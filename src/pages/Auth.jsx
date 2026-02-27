@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import ThemeToggle from '../components/ThemeToggle'
@@ -11,8 +11,57 @@ export default function Auth() {
     const [organization, setOrganization] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
-    const { login, register } = useAuth()
+    const { login, loginWithGoogle, register } = useAuth()
     const navigate = useNavigate()
+    const googleBtnRef = useRef(null)
+
+    // Initialize Google Sign-In
+    useEffect(() => {
+        const initGoogle = () => {
+            if (window.google?.accounts?.id) {
+                window.google.accounts.id.initialize({
+                    client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || 'placeholder.apps.googleusercontent.com',
+                    callback: handleGoogleCallback,
+                })
+                if (googleBtnRef.current) {
+                    window.google.accounts.id.renderButton(googleBtnRef.current, {
+                        theme: 'filled_black',
+                        size: 'large',
+                        width: '100%',
+                        text: 'signin_with',
+                        shape: 'rectangular',
+                        logo_alignment: 'center',
+                    })
+                }
+            }
+        }
+
+        // Wait for Google script to load
+        if (window.google?.accounts?.id) {
+            initGoogle()
+        } else {
+            const interval = setInterval(() => {
+                if (window.google?.accounts?.id) {
+                    clearInterval(interval)
+                    initGoogle()
+                }
+            }, 200)
+            return () => clearInterval(interval)
+        }
+    }, [isLogin])
+
+    const handleGoogleCallback = async (response) => {
+        setError('')
+        setLoading(true)
+        try {
+            await loginWithGoogle(response.credential)
+            navigate('/dashboard')
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -53,6 +102,7 @@ export default function Auth() {
                             { icon: '🧠', text: 'AI-Powered Discovery' },
                             { icon: '🗺️', text: 'Automated Data Mapping' },
                             { icon: '🛡️', text: 'Active Guardrails' },
+                            { icon: '🔐', text: 'Enterprise RBAC & Audit Trail' },
                             { icon: '🇮🇳', text: 'Native DPDPA 2023' }
                         ].map((f, i) => (
                             <div key={i} className="auth-brand-feature">
@@ -89,6 +139,18 @@ export default function Auth() {
                         >
                             Register
                         </button>
+                    </div>
+
+                    {/* Google Sign-In Button */}
+                    <div ref={googleBtnRef} style={{ width: '100%', marginBottom: 'var(--space-4)', minHeight: '44px' }} />
+
+                    <div style={{
+                        display: 'flex', alignItems: 'center', gap: 'var(--space-4)',
+                        marginBottom: 'var(--space-4)', color: 'var(--text-muted)', fontSize: '0.8rem'
+                    }}>
+                        <div style={{ flex: 1, height: '1px', background: 'var(--border-default)' }} />
+                        <span>or continue with email</span>
+                        <div style={{ flex: 1, height: '1px', background: 'var(--border-default)' }} />
                     </div>
 
                     {error && (
