@@ -74,30 +74,6 @@ export default function Landing() {
                     maxWidth: '1000px',
                     padding: '0 var(--space-6)'
                 }}>
-                    <div className="mb-6" style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: 'var(--space-2)',
-                        padding: '10px 20px',
-                        background: 'var(--bg-glass)',
-                        backdropFilter: 'blur(12px)',
-                        border: '1px solid var(--border-default)',
-                        borderRadius: 'var(--radius-full)',
-                        fontSize: '0.85rem',
-                        fontWeight: 600,
-                        color: 'var(--accent-cyan)',
-                        boxShadow: '0 4px 15px var(--shadow-color)'
-                    }}>
-                        <span style={{
-                            width: '8px',
-                            height: '8px',
-                            background: 'var(--accent-green)',
-                            borderRadius: '50%',
-                            boxShadow: '0 0 10px var(--accent-green)'
-                        }} />
-                        Privacy-as-a-Service Platform
-                    </div>
-
                     <h1 className="mb-6" style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', lineHeight: 1.1 }}>
                         <span className="text-gradient">Detect. Map. Protect.</span>
                         <br />
