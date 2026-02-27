@@ -63,8 +63,8 @@ export default function CoPilot() {
         <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 80px)' }}>
             <div className="page-header mb-4">
                 <div>
-                    <h1>🧠 AI Compliance Co-Pilot</h1>
-                    <p>Ask anything about your privacy posture — powered by live platform data + Gemini</p>
+                    <h1>🧠 Vera</h1>
+                    <p>Your AI privacy advisor — powered by live platform data + Gemini</p>
                 </div>
                 <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
                     {['dpdpa', 'gdpr', 'ccpa'].map(fw => (
@@ -81,7 +81,7 @@ export default function CoPilot() {
                 {messages.length === 0 && (
                     <div style={{ textAlign: 'center', padding: 'var(--space-8) var(--space-4)' }}>
                         <div style={{ fontSize: '4rem', marginBottom: 'var(--space-4)' }}>🧠</div>
-                        <h2 style={{ marginBottom: 'var(--space-2)', fontSize: '1.3rem' }}>Your AI Privacy Advisor</h2>
+                        <h2 style={{ marginBottom: 'var(--space-2)', fontSize: '1.3rem' }}>Meet Vera</h2>
                         <p style={{ color: 'var(--text-muted)', maxWidth: '500px', margin: '0 auto var(--space-8)', lineHeight: 1.6 }}>
                             I have access to your live consent records, data map, discovery findings, DSR queue, guardrails, and connected data sources. Ask me anything.
                         </p>
@@ -113,7 +113,7 @@ export default function CoPilot() {
                         }}>
                             {msg.role === 'assistant' && (
                                 <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', fontWeight: 700, marginBottom: 'var(--space-2)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                    {msg.isReport ? '📄 Compliance Report' : '🧠 Co-Pilot'}
+                                    {msg.isReport ? '📄 Compliance Report' : '🧠 Vera'}
                                 </div>
                             )}
                             <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div>
@@ -147,7 +147,7 @@ export default function CoPilot() {
                 <input className="form-input" style={{ flex: 1, fontSize: '0.9rem' }}
                     value={input} onChange={e => setInput(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()}
-                    placeholder="Ask about your privacy posture, compliance gaps, or DPDPA requirements..."
+                    placeholder="Ask Vera about your privacy posture, compliance gaps, or DPDPA requirements..."
                     disabled={loading} />
                 <button className="btn btn-primary" onClick={() => sendMessage()} disabled={loading || !input.trim()}
                     style={{ padding: '0 var(--space-6)' }}>
