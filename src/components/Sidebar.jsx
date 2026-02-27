@@ -8,6 +8,8 @@ const navItems = [
     { icon: '✅', label: 'Consent', path: '/dashboard/consent' },
     { icon: '📋', label: 'DSR Queue', path: '/dashboard/dsr' },
     { icon: '🛡️', label: 'Guardrails', path: '/dashboard/guardrails' },
+    { icon: '🧠', label: 'AI Co-Pilot', path: '/dashboard/copilot' },
+    { icon: '🔥', label: 'LLM Firewall', path: '/dashboard/firewall' },
 ]
 
 const adminItems = [

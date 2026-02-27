@@ -77,6 +77,12 @@ const api = {
     generateConsentNotice: (data) => request('/ai/consent-notice', { method: 'POST', body: JSON.stringify(data) }),
     riskAssessment: (data) => request('/ai/risk-assessment', { method: 'POST', body: JSON.stringify(data) }),
 
+    // AI Superpowers
+    copilot: (question, conversationHistory) => request('/ai/copilot', { method: 'POST', body: JSON.stringify({ question, conversationHistory }) }),
+    firewall: (prompt, model) => request('/ai/firewall', { method: 'POST', body: JSON.stringify({ prompt, model }) }),
+    dsrPlan: (dsr_id) => request('/ai/dsr-plan', { method: 'POST', body: JSON.stringify({ dsr_id }) }),
+    complianceReport: (framework) => request('/ai/compliance-report', { method: 'POST', body: JSON.stringify({ framework }) }),
+
     // Data Source Connectors
     getDataSources: () => request('/connectors'),
     addDataSource: (data) => request('/connectors', { method: 'POST', body: JSON.stringify(data) }),

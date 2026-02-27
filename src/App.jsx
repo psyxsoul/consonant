@@ -12,6 +12,8 @@ import DSRManager from './pages/DSRManager'
 import Guardrails from './pages/Guardrails'
 import AuditLog from './pages/AuditLog'
 import DataSources from './pages/DataSources'
+import CoPilot from './pages/CoPilot'
+import LLMFirewall from './pages/LLMFirewall'
 
 function ProtectedRoute({ children }) {
     const { isAuthenticated, loading } = useAuth()
@@ -39,6 +41,8 @@ function AppRoutes() {
                 <Route path="guardrails" element={<Guardrails />} />
                 <Route path="audit" element={<AdminRoute><AuditLog /></AdminRoute>} />
                 <Route path="connectors" element={<AdminRoute><DataSources /></AdminRoute>} />
+                <Route path="copilot" element={<CoPilot />} />
+                <Route path="firewall" element={<LLMFirewall />} />
             </Route>
         </Routes>
     )
