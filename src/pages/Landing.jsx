@@ -144,152 +144,150 @@ export default function Landing() {
                 </div>
             </section>
 
-            <div className="dash-content-inner">
-                {/* ===== PILLARS ===== */}
-                <section id="features" className="section-highlight animate-fade-in" style={{ animationDelay: '0.2s' }}>
-                    <div className="container">
-                        <div className="text-center mb-12">
-                            <span className="badge badge-cyan mb-4">Our Intelligence</span>
-                            <h2 style={{ fontSize: '2.5rem', marginBottom: 'var(--space-4)' }}>The Five Pillars of Protection</h2>
-                            <p style={{ maxWidth: '600px', margin: '0 auto', color: 'var(--text-secondary)' }}>Most platforms merely detect and report. Consonant detects, maps, and actively protects — powered by Gemini AI.</p>
-                        </div>
-
-                        <div className="grid-3">
-                            {pillars.map((p, i) => (
-                                <PillarCard key={i} {...p} />
-                            ))}
-                        </div>
+            {/* ===== PILLARS ===== */}
+            <section id="features" className="section-highlight animate-fade-in" style={{ animationDelay: '0.2s' }}>
+                <div className="container">
+                    <div className="text-center mb-12">
+                        <span className="badge badge-cyan mb-4">Our Intelligence</span>
+                        <h2 style={{ fontSize: '2.5rem', marginBottom: 'var(--space-4)' }}>The Five Pillars of Protection</h2>
+                        <p style={{ maxWidth: '600px', margin: '0 auto', color: 'var(--text-secondary)' }}>Most platforms merely detect and report. Consonant detects, maps, and actively protects — powered by Gemini AI.</p>
                     </div>
-                </section>
 
-                {/* ===== DPDPA ===== */}
-                <section id="dpdpa" className="animate-fade-in" style={{ padding: 'var(--space-16) 0', position: 'relative' }}>
-                    <div className="container">
-                        <div className="grid-2 items-center gap-12">
-                            <div>
-                                <span className="badge badge-violet mb-4">India-First Compliance</span>
-                                <h2 style={{ fontSize: '2.5rem', marginBottom: 'var(--space-6)' }}>Native DPDPA 2023 Intelligence</h2>
-                                <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', marginBottom: 'var(--space-8)', lineHeight: 1.7 }}>
-                                    Purpose-built for the Indian Digital Personal Data Protection Act.
-                                    Understand your obligations as a Data Fiduciary or Processor with domain-specific guidance.
-                                </p>
+                    <div className="grid-3">
+                        {pillars.map((p, i) => (
+                            <PillarCard key={i} {...p} />
+                        ))}
+                    </div>
+                </div>
+            </section>
 
-                                <div className="flex-col gap-6">
-                                    {[
-                                        { icon: '⚖️', title: 'Legal Basis Validation', desc: 'Automatically evaluate whether processing has a lawful basis under the DPDPA.' },
-                                        { icon: '🔔', title: 'Breach Notification Engine', desc: 'Generate compliant breach notifications within the mandated timelines.' },
-                                        { icon: '👶', title: 'Children\'s Data Protection', desc: 'Detect and flag processing of children\'s data requiring guardian consent.' }
-                                    ].map((f, i) => (
-                                        <div key={i} className="flex items-center gap-4">
-                                            <div style={{
-                                                width: '56px',
-                                                height: '56px',
-                                                background: 'var(--bg-glass)',
-                                                borderRadius: 'var(--radius-md)',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                fontSize: '1.5rem',
-                                                border: '1px solid var(--border-default)',
-                                                boxShadow: '0 4px 10px var(--shadow-color)'
-                                            }}>{f.icon}</div>
-                                            <div style={{ flex: 1 }}>
-                                                <h4 style={{ fontSize: '1.1rem', marginBottom: '4px' }}>{f.title}</h4>
-                                                <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{f.desc}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
+            {/* ===== DPDPA ===== */}
+            <section id="dpdpa" className="animate-fade-in" style={{ padding: 'var(--space-16) 0', position: 'relative' }}>
+                <div className="container">
+                    <div className="split-grid">
+                        <div>
+                            <span className="badge badge-violet mb-4">India-First Compliance</span>
+                            <h2 style={{ fontSize: '2.5rem', marginBottom: 'var(--space-6)' }}>Native DPDPA 2023 Intelligence</h2>
+                            <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', marginBottom: 'var(--space-8)', lineHeight: 1.7 }}>
+                                Purpose-built for the Indian Digital Personal Data Protection Act.
+                                Understand your obligations as a Data Fiduciary or Processor with domain-specific guidance.
+                            </p>
 
-                            <div className="grid-2">
-                                {dpdpaCards.map((card, i) => (
-                                    <div key={i} className="glass-card flex-col items-center justify-center text-center gap-4 p-6 hover-glow">
+                            <div className="flex-col gap-6">
+                                {[
+                                    { icon: '⚖️', title: 'Legal Basis Validation', desc: 'Automatically evaluate whether processing has a lawful basis under the DPDPA.' },
+                                    { icon: '🔔', title: 'Breach Notification Engine', desc: 'Generate compliant breach notifications within the mandated timelines.' },
+                                    { icon: '👶', title: 'Children\'s Data Protection', desc: 'Detect and flag processing of children\'s data requiring guardian consent.' }
+                                ].map((f, i) => (
+                                    <div key={i} className="flex items-center gap-4">
                                         <div style={{
-                                            width: '64px',
-                                            height: '64px',
-                                            background: card.bg,
+                                            width: '56px',
+                                            height: '56px',
+                                            background: 'var(--bg-glass)',
                                             borderRadius: 'var(--radius-md)',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
-                                            fontSize: '2rem',
-                                            border: '1px solid var(--border-subtle)'
-                                        }}>{card.icon}</div>
-                                        <div>
-                                            <h4 style={{ fontSize: '1rem', marginBottom: '8px' }}>{card.title}</h4>
-                                            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{card.desc}</p>
+                                            fontSize: '1.5rem',
+                                            border: '1px solid var(--border-default)',
+                                            boxShadow: '0 4px 10px var(--shadow-color)'
+                                        }}>{f.icon}</div>
+                                        <div style={{ flex: 1 }}>
+                                            <h4 style={{ fontSize: '1.1rem', marginBottom: '4px' }}>{f.title}</h4>
+                                            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{f.desc}</p>
                                         </div>
                                     </div>
                                 ))}
                             </div>
                         </div>
-                    </div>
-                </section>
 
-                {/* ===== HOW IT WORKS ===== */}
-                <section className="section-highlight animate-fade-in" style={{ animationDelay: '0.2s', textAlign: 'center' }}>
-                    <div className="container">
-                        <div className="text-center mb-12">
-                            <span className="badge badge-green mb-4">Seamless Onboarding</span>
-                            <h2 style={{ fontSize: '2.5rem', marginBottom: 'var(--space-4)' }}>Three Steps to Privacy Intelligence</h2>
-                        </div>
-
-                        <div className="grid-3 gap-12">
-                            {[
-                                { num: '1', title: 'Connect', desc: 'Plug in your databases, cloud storage, and SaaS tools through our 100+ integrations.' },
-                                { num: '2', title: 'Discover', desc: 'Our AI semantically scans your entire data landscape to identify PII and linkability risks.' },
-                                { num: '3', title: 'Protect', desc: 'Automated consent mapping, active guardrails, and one-click DSR fulfillment secure your data.' }
-                            ].map((s, i) => (
-                                <div key={i} className="flex-col items-center">
+                        <div className="grid-2">
+                            {dpdpaCards.map((card, i) => (
+                                <div key={i} className="glass-card flex-col items-center justify-center text-center gap-4 p-6 hover-glow">
                                     <div style={{
-                                        width: '72px',
-                                        height: '72px',
-                                        background: 'var(--gradient-accent)',
-                                        borderRadius: '50%',
-                                        marginBottom: 'var(--space-6)',
+                                        width: '64px',
+                                        height: '64px',
+                                        background: card.bg,
+                                        borderRadius: 'var(--radius-md)',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        fontSize: '1.75rem',
-                                        fontWeight: 800,
-                                        color: 'white',
-                                        boxShadow: '0 8px 30px rgba(0, 212, 255, 0.4)'
-                                    }}>{s.num}</div>
-                                    <h3 style={{ fontSize: '1.35rem', marginBottom: 'var(--space-3)' }}>{s.title}</h3>
-                                    <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}>{s.desc}</p>
+                                        fontSize: '2rem',
+                                        border: '1px solid var(--border-subtle)'
+                                    }}>{card.icon}</div>
+                                    <div>
+                                        <h4 style={{ fontSize: '1rem', marginBottom: '8px' }}>{card.title}</h4>
+                                        <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{card.desc}</p>
+                                    </div>
                                 </div>
                             ))}
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                {/* ===== CTA ===== */}
-                <section style={{ padding: 'var(--space-12) 0 var(--space-20) 0' }}>
-                    <div className="container">
-                        <div className="glass-card" style={{
-                            background: 'var(--gradient-card)',
-                            borderRadius: 'var(--radius-xl)',
-                            padding: 'var(--space-16) var(--space-8)',
-                            textAlign: 'center',
-                            border: '1px solid var(--border-accent)'
-                        }}>
-                            <h2 style={{ fontSize: '3rem', marginBottom: 'var(--space-4)' }}>Ready to <span className="text-gradient">Transform</span> Your Privacy?</h2>
-                            <p style={{ fontSize: '1.15rem', color: 'var(--text-secondary)', marginBottom: 'var(--space-10)', maxWidth: '650px', margin: '0 auto var(--space-10)' }}>
-                                Join the next generation of privacy-conscious organizations. Start detecting, mapping, and protecting in minutes.
-                            </p>
-                            <div className="flex justify-center gap-6 flex-wrap">
-                                <Link to="/auth" className="btn btn-primary" style={{ padding: '16px 48px', fontSize: '1.1rem' }}>
-                                    Start Free Trial →
-                                </Link>
-                                <button className="btn btn-secondary" style={{ padding: '16px 48px', fontSize: '1.1rem' }}>
-                                    Schedule Demo
-                                </button>
+            {/* ===== HOW IT WORKS ===== */}
+            <section className="section-highlight animate-fade-in" style={{ animationDelay: '0.2s', textAlign: 'center' }}>
+                <div className="container">
+                    <div className="text-center mb-12">
+                        <span className="badge badge-green mb-4">Seamless Onboarding</span>
+                        <h2 style={{ fontSize: '2.5rem', marginBottom: 'var(--space-4)' }}>Three Steps to Privacy Intelligence</h2>
+                    </div>
+
+                    <div className="grid-3 gap-12">
+                        {[
+                            { num: '1', title: 'Connect', desc: 'Plug in your databases, cloud storage, and SaaS tools through our 100+ integrations.' },
+                            { num: '2', title: 'Discover', desc: 'Our AI semantically scans your entire data landscape to identify PII and linkability risks.' },
+                            { num: '3', title: 'Protect', desc: 'Automated consent mapping, active guardrails, and one-click DSR fulfillment secure your data.' }
+                        ].map((s, i) => (
+                            <div key={i} className="flex-col items-center">
+                                <div style={{
+                                    width: '72px',
+                                    height: '72px',
+                                    background: 'var(--gradient-accent)',
+                                    borderRadius: '50%',
+                                    marginBottom: 'var(--space-6)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '1.75rem',
+                                    fontWeight: 800,
+                                    color: 'white',
+                                    boxShadow: '0 8px 30px rgba(0, 212, 255, 0.4)'
+                                }}>{s.num}</div>
+                                <h3 style={{ fontSize: '1.35rem', marginBottom: 'var(--space-3)' }}>{s.title}</h3>
+                                <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}>{s.desc}</p>
                             </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* ===== CTA ===== */}
+            <section style={{ padding: 'var(--space-12) 0 var(--space-20) 0' }}>
+                <div className="container">
+                    <div className="glass-card" style={{
+                        background: 'var(--gradient-card)',
+                        borderRadius: 'var(--radius-xl)',
+                        padding: 'var(--space-16) var(--space-8)',
+                        textAlign: 'center',
+                        border: '1px solid var(--border-accent)'
+                    }}>
+                        <h2 style={{ fontSize: '3rem', marginBottom: 'var(--space-4)' }}>Ready to <span className="text-gradient">Transform</span> Your Privacy?</h2>
+                        <p style={{ fontSize: '1.15rem', color: 'var(--text-secondary)', marginBottom: 'var(--space-10)', maxWidth: '650px', margin: '0 auto var(--space-10)' }}>
+                            Join the next generation of privacy-conscious organizations. Start detecting, mapping, and protecting in minutes.
+                        </p>
+                        <div className="flex justify-center gap-6 flex-wrap">
+                            <Link to="/auth" className="btn btn-primary" style={{ padding: '16px 48px', fontSize: '1.1rem' }}>
+                                Start Free Trial →
+                            </Link>
+                            <button className="btn btn-secondary" style={{ padding: '16px 48px', fontSize: '1.1rem' }}>
+                                Schedule Demo
+                            </button>
                         </div>
                     </div>
-                </section>
-            </div>
+                </div>
+            </section>
 
             <Footer />
         </div>
