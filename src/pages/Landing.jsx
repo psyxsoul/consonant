@@ -67,11 +67,12 @@ export default function Landing() {
                     maskImage: 'radial-gradient(ellipse 60% 50% at 50% 50%, black 0%, transparent 80%)'
                 }} />
 
-                <div className="hero-content" style={{
+                <div className="hero-content container" style={{
                     position: 'relative',
                     zIndex: 2,
                     textAlign: 'center',
-                    maxWidth: '900px'
+                    maxWidth: '1000px',
+                    padding: '0 var(--space-6)'
                 }}>
                     <div className="mb-6" style={{
                         display: 'inline-flex',
