@@ -11,6 +11,7 @@ import Discovery from './pages/Discovery'
 import DSRManager from './pages/DSRManager'
 import Guardrails from './pages/Guardrails'
 import AuditLog from './pages/AuditLog'
+import DataSources from './pages/DataSources'
 
 function ProtectedRoute({ children }) {
     const { isAuthenticated, loading } = useAuth()
@@ -37,6 +38,7 @@ function AppRoutes() {
                 <Route path="dsr" element={<DSRManager />} />
                 <Route path="guardrails" element={<Guardrails />} />
                 <Route path="audit" element={<AdminRoute><AuditLog /></AdminRoute>} />
+                <Route path="connectors" element={<AdminRoute><DataSources /></AdminRoute>} />
             </Route>
         </Routes>
     )

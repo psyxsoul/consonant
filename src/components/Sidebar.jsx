@@ -11,6 +11,7 @@ const navItems = [
 ]
 
 const adminItems = [
+    { icon: '🔌', label: 'Connectors', path: '/dashboard/connectors' },
     { icon: '📜', label: 'Audit Trail', path: '/dashboard/audit' },
 ]
 

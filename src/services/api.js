@@ -77,6 +77,13 @@ const api = {
     generateConsentNotice: (data) => request('/ai/consent-notice', { method: 'POST', body: JSON.stringify(data) }),
     riskAssessment: (data) => request('/ai/risk-assessment', { method: 'POST', body: JSON.stringify(data) }),
 
+    // Data Source Connectors
+    getDataSources: () => request('/connectors'),
+    addDataSource: (data) => request('/connectors', { method: 'POST', body: JSON.stringify(data) }),
+    testDataSource: (id) => request(`/connectors/${id}/test`, { method: 'POST' }),
+    scanDataSource: (id) => request(`/connectors/${id}/scan`, { method: 'POST' }),
+    deleteDataSource: (id) => request(`/connectors/${id}`, { method: 'DELETE' }),
+
     // Audit Trail
     getAuditLog: (page = 1, limit = 50, filters = {}) => {
         const params = new URLSearchParams({ page, limit, ...filters })
