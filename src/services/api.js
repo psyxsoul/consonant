@@ -72,8 +72,9 @@ const api = {
     getProxyLog: () => request('/guardrails/proxy-log'),
     getVaults: () => request('/guardrails/vaults'),
 
-    // Slug validation
+    // Slug validation & invite flow
     validateSlug: (slug) => request(`/auth/org/${slug}`),
+    setPassword: (token, password) => request('/auth/set-password', { method: 'POST', body: JSON.stringify({ token, password }) }),
 
     // AI
     analyze: (text, context) => request('/ai/analyze', { method: 'POST', body: JSON.stringify({ text, context }) }),
@@ -99,7 +100,7 @@ const api = {
     updateOrg: (id, data) => request(`/orgs/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     deleteOrg: (id) => request(`/orgs/${id}`, { method: 'DELETE' }),
     getOrgUsers: (id) => request(`/orgs/${id}/users`),
-    assignUserToOrg: (orgId, data) => request(`/orgs/${orgId}/users`, { method: 'POST', body: JSON.stringify(data) }),
+    updateOrgFeatures: (id, features) => request(`/orgs/${id}/features`, { method: 'PUT', body: JSON.stringify({ features }) }),
 
     // Licenses & Features
     getLicenses: () => request('/licenses'),

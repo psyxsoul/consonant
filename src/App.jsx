@@ -17,6 +17,7 @@ import DataSources from './pages/DataSources'
 import CoPilot from './pages/CoPilot'
 import LLMFirewall from './pages/LLMFirewall'
 import LicenseManager from './pages/LicenseManager'
+import SetPassword from './pages/SetPassword'
 
 function ProtectedRoute({ children }) {
     const { isAuthenticated, loading } = useAuth()
@@ -52,6 +53,7 @@ function AppRoutes() {
 
             {/* Slug-based tenant login */}
             <Route path="/:slug/login" element={<Auth />} />
+            <Route path="/:slug/set-password" element={<SetPassword />} />
 
             {/* Slug-based tenant dashboard */}
             <Route path="/:slug/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
