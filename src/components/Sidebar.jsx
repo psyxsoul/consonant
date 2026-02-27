@@ -11,44 +11,31 @@ const navItems = [
 
 export default function Sidebar() {
     return (
-        <aside className="sidebar" style={{
-            width: '280px',
-            background: 'var(--bg-secondary)',
-            borderRight: '1px solid var(--border-default)',
-            padding: 'var(--space-6)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 'var(--space-8)',
-            transition: 'all var(--transition-base)'
-        }}>
-            <div className="sidebar-header" style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--space-3)',
-                padding: '0 var(--space-2)',
-                marginBottom: 'var(--space-2)'
-            }}>
+        <aside className="sidebar flex-col gap-8 p-6">
+            <div className="sidebar-header flex items-center gap-3 px-2 mb-4">
                 <div style={{
-                    width: '32px',
-                    height: '32px',
+                    width: '36px',
+                    height: '36px',
                     background: 'var(--gradient-accent)',
-                    borderRadius: 'var(--radius-sm)',
+                    borderRadius: 'var(--radius-md)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '1rem',
-                    color: 'white'
+                    fontSize: '1.2rem',
+                    color: 'white',
+                    boxShadow: '0 4px 12px rgba(0, 212, 255, 0.3)'
                 }}>◈</div>
                 <span style={{
                     fontWeight: 800,
-                    fontSize: '1.25rem',
-                    letterSpacing: '-0.02em'
+                    fontSize: '1.35rem',
+                    letterSpacing: '-0.02em',
+                    color: 'var(--text-primary)'
                 }}>Consonant</span>
             </div>
 
-            <nav className="sidebar-nav" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
+            <nav className="flex-col gap-2">
                 <div style={{
-                    fontSize: '0.7rem',
+                    fontSize: '0.75rem',
                     fontWeight: 700,
                     textTransform: 'uppercase',
                     letterSpacing: '0.05em',
@@ -65,37 +52,31 @@ export default function Sidebar() {
                         style={({ isActive }) => ({
                             display: 'flex',
                             alignItems: 'center',
-                            gap: 'var(--space-3)',
-                            padding: '12px 14px',
+                            gap: 'var(--space-4)',
+                            padding: '12px 16px',
                             borderRadius: 'var(--radius-md)',
-                            color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+                            color: isActive ? 'var(--accent-cyan)' : 'var(--text-secondary)',
                             background: isActive ? 'var(--bg-tertiary)' : 'transparent',
                             textDecoration: 'none',
-                            fontSize: '0.9rem',
+                            fontSize: '0.95rem',
                             fontWeight: isActive ? 600 : 500,
                             transition: 'all var(--transition-base)',
-                            border: isActive ? '1px solid var(--border-default)' : '1px solid transparent'
+                            border: isActive ? '1px solid var(--accent-cyan-dim)' : '1px solid transparent',
+                            boxShadow: isActive ? 'inset 4px 0 0 var(--accent-cyan)' : 'none'
                         })}
                     >
-                        <span style={{ fontSize: '1.1rem' }}>{item.icon}</span>
+                        <span style={{ fontSize: '1.2rem', opacity: 0.9 }}>{item.icon}</span>
                         <span style={{ flex: 1 }}>{item.label}</span>
                         {item.badge && (
-                            <span style={{
-                                background: 'var(--accent-cyan-dim)',
-                                color: 'var(--accent-cyan)',
-                                padding: '2px 8px',
-                                borderRadius: 'var(--radius-full)',
-                                fontSize: '0.7rem',
-                                fontWeight: 700
-                            }}>{item.badge}</span>
+                            <span className="badge badge-cyan" style={{ fontSize: '0.7rem' }}>{item.badge}</span>
                         )}
                     </NavLink>
                 ))}
             </nav>
 
-            <div className="sidebar-extra" style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
+            <div className="mt-auto flex-col gap-2">
                 <div style={{
-                    fontSize: '0.7rem',
+                    fontSize: '0.75rem',
                     fontWeight: 700,
                     textTransform: 'uppercase',
                     letterSpacing: '0.05em',
@@ -106,62 +87,63 @@ export default function Sidebar() {
                 <NavLink to="#" style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 'var(--space-3)',
-                    padding: '10px 14px',
+                    gap: 'var(--space-4)',
+                    padding: '10px 16px',
                     borderRadius: 'var(--radius-md)',
                     color: 'var(--text-secondary)',
                     textDecoration: 'none',
-                    fontSize: '0.9rem',
-                    fontWeight: 500
+                    fontSize: '0.95rem',
+                    fontWeight: 500,
+                    transition: 'all var(--transition-base)'
                 }}>
-                    <span>⚙️</span>
+                    <span style={{ fontSize: '1.1rem' }}>⚙️</span>
                     <span>Settings</span>
                 </NavLink>
                 <NavLink to="#" style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 'var(--space-3)',
-                    padding: '10px 14px',
+                    gap: 'var(--space-4)',
+                    padding: '10px 16px',
                     borderRadius: 'var(--radius-md)',
                     color: 'var(--text-secondary)',
                     textDecoration: 'none',
-                    fontSize: '0.9rem',
-                    fontWeight: 500
+                    fontSize: '0.95rem',
+                    fontWeight: 500,
+                    transition: 'all var(--transition-base)'
                 }}>
-                    <span>💬</span>
+                    <span style={{ fontSize: '1.1rem' }}>💬</span>
                     <span>Help Center</span>
                 </NavLink>
             </div>
 
-            <div className="sidebar-profile" style={{
-                marginTop: 'var(--space-4)',
-                padding: 'var(--space-4)',
+            <div className="sidebar-profile mt-4 p-4 flex items-center gap-3" style={{
                 background: 'var(--bg-tertiary)',
                 borderRadius: 'var(--radius-lg)',
                 border: '1px solid var(--border-default)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--space-3)'
-            }}>
+                transition: 'all var(--transition-base)',
+                cursor: 'pointer'
+            }} onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--accent-violet)'} onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--border-default)'}>
                 <div style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
+                    minWidth: '36px',
+                    height: '36px',
+                    borderRadius: 'var(--radius-md)',
                     background: 'var(--accent-violet-dim)',
+                    border: '1px solid rgba(139,92,246,0.3)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '1rem'
+                    fontSize: '1.1rem'
                 }}>🏢</div>
-                <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <div className="flex-col" style={{ overflow: 'hidden' }}>
                     <span style={{
-                        fontSize: '0.8rem',
+                        fontSize: '0.85rem',
                         fontWeight: 600,
+                        color: 'var(--text-primary)',
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis'
                     }}>Synveritas Corp</span>
-                    <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>Organization Admin</span>
+                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Organization Admin</span>
                 </div>
             </div>
         </aside>

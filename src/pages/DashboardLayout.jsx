@@ -11,28 +11,13 @@ export default function DashboardLayout() {
         : 'U'
 
     return (
-        <div className="dashboard-layout" style={{
-            display: 'flex',
-            height: '100vh',
-            background: 'var(--bg-primary)',
-            color: 'var(--text-primary)',
-            transition: 'all var(--transition-base)'
-        }}>
+        <div className="dashboard-container">
             <Sidebar />
 
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+            <div className="dash-main-wrapper">
                 {/* Top Bar */}
-                <header className="dash-topbar" style={{
-                    height: '72px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '0 var(--space-8)',
-                    background: 'var(--bg-primary)',
-                    borderBottom: '1px solid var(--border-default)',
-                    zIndex: 10
-                }}>
-                    <div className="dash-topbar-left" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-8)' }}>
+                <header className="dash-topbar">
+                    <div className="dash-topbar-left flex items-center gap-8">
                         <div className="dash-topbar-search" style={{
                             background: 'var(--bg-secondary)',
                             padding: '10px 16px',
@@ -41,7 +26,8 @@ export default function DashboardLayout() {
                             alignItems: 'center',
                             gap: '12px',
                             width: '320px',
-                            border: '1px solid var(--border-subtle)'
+                            border: '1px solid var(--border-subtle)',
+                            transition: 'all var(--transition-base)'
                         }}>
                             <span style={{ fontSize: '1.1rem', opacity: 0.6 }}>🔍</span>
                             <input
@@ -59,21 +45,14 @@ export default function DashboardLayout() {
                         </div>
                     </div>
 
-                    <div className="dash-topbar-right" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-6)' }}>
+                    <div className="dash-topbar-right flex items-center gap-6">
                         <ThemeToggle />
 
-                        <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
-                            <button className="topbar-icon-btn" title="Notifications" style={{
-                                background: 'var(--bg-secondary)',
-                                border: '1px solid var(--border-default)',
-                                borderRadius: 'var(--radius-md)',
+                        <div className="flex gap-2">
+                            <button className="btn-ghost flex items-center justify-center p-0" title="Notifications" style={{
                                 width: '40px',
                                 height: '40px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontSize: '1.1rem',
-                                color: 'var(--text-primary)',
+                                fontSize: '1.2rem',
                                 position: 'relative'
                             }}>
                                 🔔
@@ -90,16 +69,12 @@ export default function DashboardLayout() {
                             </button>
                         </div>
 
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 'var(--space-4)',
-                            padding: '6px',
-                            paddingRight: '16px',
+                        <div className="flex items-center gap-4 py-1 px-1 pr-4" style={{
                             background: 'var(--bg-secondary)',
                             borderRadius: 'var(--radius-full)',
                             border: '1px solid var(--border-default)',
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+                            transition: 'all var(--transition-base)'
                         }} onClick={logout}>
                             <div className="topbar-avatar" style={{
                                 width: '36px',
@@ -111,11 +86,12 @@ export default function DashboardLayout() {
                                 justifyContent: 'center',
                                 fontWeight: 700,
                                 color: 'white',
-                                fontSize: '0.85rem'
+                                fontSize: '0.85rem',
+                                boxShadow: '0 4px 10px rgba(0, 212, 255, 0.2)'
                             }}>
                                 {initials}
                             </div>
-                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <div className="flex-col">
                                 <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{user?.name || 'User'}</span>
                                 <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Sign Out</span>
                             </div>
@@ -123,13 +99,8 @@ export default function DashboardLayout() {
                     </div>
                 </header>
 
-                <main className="dash-main" style={{
-                    flex: 1,
-                    overflowY: 'auto',
-                    padding: 'var(--space-8)',
-                    background: 'var(--bg-primary)'
-                }}>
-                    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+                <main className="dash-main">
+                    <div className="dash-content-inner animate-fade-in">
                         <Outlet />
                     </div>
                 </main>
