@@ -72,6 +72,9 @@ const api = {
     getProxyLog: () => request('/guardrails/proxy-log'),
     getVaults: () => request('/guardrails/vaults'),
 
+    // Slug validation
+    validateSlug: (slug) => request(`/auth/org/${slug}`),
+
     // AI
     analyze: (text, context) => request('/ai/analyze', { method: 'POST', body: JSON.stringify({ text, context }) }),
     generateConsentNotice: (data) => request('/ai/consent-notice', { method: 'POST', body: JSON.stringify(data) }),

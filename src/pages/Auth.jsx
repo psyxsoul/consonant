@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import ThemeToggle from '../components/ThemeToggle'
+import api from '../services/api'
 
 export default function Auth() {
     const [isLogin, setIsLogin] = useState(true)
@@ -11,9 +12,21 @@ export default function Auth() {
     const [organization, setOrganization] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
+    const [orgInfo, setOrgInfo] = useState(null)
+    const [slugError, setSlugError] = useState(null)
     const { login, loginWithGoogle, register } = useAuth()
     const navigate = useNavigate()
     const googleBtnRef = useRef(null)
+    const { slug } = useParams()
+
+    // Validate org slug
+    useEffect(() => {
+        if (slug) {
+            api.validateSlug(slug)
+                .then(org => setOrgInfo(org))
+                .catch(() => setSlugError(`Organization "${slug}" not found`))
+        }
+    }, [slug])
 
     // Initialize Google Sign-In
     useEffect(() => {
@@ -55,7 +68,7 @@ export default function Auth() {
         setLoading(true)
         try {
             await loginWithGoogle(response.credential)
-            navigate('/dashboard')
+            navigate(slug ? `/${slug}/dashboard` : '/dashboard')
         } catch (err) {
             setError(err.message)
         } finally {
@@ -73,7 +86,7 @@ export default function Auth() {
             } else {
                 await register(name, email, password, organization)
             }
-            navigate('/dashboard')
+            navigate(slug ? `/${slug}/dashboard` : '/dashboard')
         } catch (err) {
             setError(err.message)
         } finally {

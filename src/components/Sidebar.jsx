@@ -1,26 +1,29 @@
-import { NavLink, Link } from 'react-router-dom'
+import { NavLink, Link, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 // Nav items with their required feature key
 const navItems = [
-    { icon: '📊', label: 'Overview', path: '/dashboard', end: true },
-    { icon: '🔍', label: 'Discovery', path: '/dashboard/discovery', feature: 'discovery' },
-    { icon: '🗺️', label: 'Data Map', path: '/dashboard/datamap', feature: 'datamap' },
-    { icon: '✅', label: 'Consent', path: '/dashboard/consent', feature: 'consent' },
-    { icon: '📋', label: 'DSR Queue', path: '/dashboard/dsr', feature: 'dsr' },
-    { icon: '🛡️', label: 'Guardrails', path: '/dashboard/guardrails', feature: 'guardrails' },
-    { icon: '🧠', label: 'Vera AI', path: '/dashboard/copilot', feature: 'vera' },
-    { icon: '🔥', label: 'LLM Firewall', path: '/dashboard/firewall', feature: 'firewall' },
+    { icon: '📊', label: 'Overview', path: '', end: true },
+    { icon: '🔍', label: 'Discovery', path: '/discovery', feature: 'discovery' },
+    { icon: '🗺️', label: 'Data Map', path: '/datamap', feature: 'datamap' },
+    { icon: '✅', label: 'Consent', path: '/consent', feature: 'consent' },
+    { icon: '📋', label: 'DSR Queue', path: '/dsr', feature: 'dsr' },
+    { icon: '🛡️', label: 'Guardrails', path: '/guardrails', feature: 'guardrails' },
+    { icon: '🧠', label: 'Vera AI', path: '/copilot', feature: 'vera' },
+    { icon: '🔥', label: 'LLM Firewall', path: '/firewall', feature: 'firewall' },
 ]
 
 const adminItems = [
-    { icon: '🔌', label: 'Connectors', path: '/dashboard/connectors', feature: 'connectors' },
-    { icon: '📜', label: 'Audit Trail', path: '/dashboard/audit', feature: 'audit' },
-    { icon: '🔑', label: 'Licenses', path: '/dashboard/licenses', superAdminOnly: true },
+    { icon: '🔌', label: 'Connectors', path: '/connectors', feature: 'connectors' },
+    { icon: '📜', label: 'Audit Trail', path: '/audit', feature: 'audit' },
 ]
 
 export default function Sidebar() {
     const { user, isAdmin, isSuperAdmin, hasFeature } = useAuth()
+    const { slug } = useParams()
+
+    // Build the base path — slug-based or legacy
+    const basePath = slug ? `/${slug}/dashboard` : '/dashboard'
 
     const roleColor = {
         super_admin: { bg: 'var(--accent-red-dim)', color: 'var(--accent-red)' },
@@ -40,7 +43,7 @@ export default function Sidebar() {
                 <div className="sidebar-section-label">Platform</div>
                 <nav className="sidebar-nav">
                     {navItems.filter(item => !item.feature || hasFeature(item.feature)).map(item => (
-                        <NavLink key={item.path} to={item.path} end={item.end}
+                        <NavLink key={item.path} to={`${basePath}${item.path}`} end={item.end}
                             className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
                             <span className="sidebar-link-icon">{item.icon}</span>
                             <span className="sidebar-link-text">{item.label}</span>
@@ -52,11 +55,8 @@ export default function Sidebar() {
                     <>
                         <div className="sidebar-section-label" style={{ marginTop: 'var(--space-6)' }}>Administration</div>
                         <nav className="sidebar-nav">
-                            {adminItems.filter(item => {
-                                if (item.superAdminOnly) return isSuperAdmin
-                                return !item.feature || hasFeature(item.feature)
-                            }).map(item => (
-                                <NavLink key={item.path} to={item.path}
+                            {adminItems.filter(item => !item.feature || hasFeature(item.feature)).map(item => (
+                                <NavLink key={item.path} to={`${basePath}${item.path}`}
                                     className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
                                     <span className="sidebar-link-icon">{item.icon}</span>
                                     <span className="sidebar-link-text">{item.label}</span>
@@ -82,13 +82,23 @@ export default function Sidebar() {
                     <div className="sidebar-org-icon">🏢</div>
                     <div className="sidebar-org-info">
                         <span className="sidebar-org-name">{user?.organization || 'Synveritas Corp'}</span>
-                        <span className="sidebar-org-role" style={{
-                            background: role.bg, color: role.color,
-                            padding: '1px 8px', borderRadius: 'var(--radius-sm)', fontSize: '0.65rem',
-                            fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em'
-                        }}>
-                            {user?.role?.replace('_', ' ') || 'Admin'}
-                        </span>
+                        <div style={{ display: 'flex', gap: 'var(--space-2)', alignItems: 'center' }}>
+                            <span className="sidebar-org-role" style={{
+                                background: role.bg, color: role.color,
+                                padding: '1px 8px', borderRadius: 'var(--radius-sm)', fontSize: '0.65rem',
+                                fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em'
+                            }}>
+                                {user?.role?.replace('_', ' ') || 'Admin'}
+                            </span>
+                            {slug && (
+                                <span style={{
+                                    fontSize: '0.6rem', color: 'var(--text-muted)',
+                                    fontFamily: 'var(--font-mono)'
+                                }}>
+                                    /{slug}
+                                </span>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
