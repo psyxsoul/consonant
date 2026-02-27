@@ -1,61 +1,63 @@
 import { NavLink, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
+// Nav items with their required feature key
 const navItems = [
     { icon: '📊', label: 'Overview', path: '/dashboard', end: true },
-    { icon: '🔍', label: 'Discovery', path: '/dashboard/discovery' },
-    { icon: '🗺️', label: 'Data Map', path: '/dashboard/datamap' },
-    { icon: '✅', label: 'Consent', path: '/dashboard/consent' },
-    { icon: '📋', label: 'DSR Queue', path: '/dashboard/dsr' },
-    { icon: '🛡️', label: 'Guardrails', path: '/dashboard/guardrails' },
-    { icon: '🧠', label: 'Vera AI', path: '/dashboard/copilot' },
-    { icon: '🔥', label: 'LLM Firewall', path: '/dashboard/firewall' },
+    { icon: '🔍', label: 'Discovery', path: '/dashboard/discovery', feature: 'discovery' },
+    { icon: '🗺️', label: 'Data Map', path: '/dashboard/datamap', feature: 'datamap' },
+    { icon: '✅', label: 'Consent', path: '/dashboard/consent', feature: 'consent' },
+    { icon: '📋', label: 'DSR Queue', path: '/dashboard/dsr', feature: 'dsr' },
+    { icon: '🛡️', label: 'Guardrails', path: '/dashboard/guardrails', feature: 'guardrails' },
+    { icon: '🧠', label: 'Vera AI', path: '/dashboard/copilot', feature: 'vera' },
+    { icon: '🔥', label: 'LLM Firewall', path: '/dashboard/firewall', feature: 'firewall' },
 ]
 
 const adminItems = [
-    { icon: '🔌', label: 'Connectors', path: '/dashboard/connectors' },
-    { icon: '📜', label: 'Audit Trail', path: '/dashboard/audit' },
+    { icon: '🔌', label: 'Connectors', path: '/dashboard/connectors', feature: 'connectors' },
+    { icon: '📜', label: 'Audit Trail', path: '/dashboard/audit', feature: 'audit' },
+    { icon: '🔑', label: 'Licenses', path: '/dashboard/licenses', superAdminOnly: true },
 ]
 
 export default function Sidebar() {
-    const { user, isAdmin } = useAuth()
+    const { user, isAdmin, isSuperAdmin, hasFeature } = useAuth()
+
+    const roleColor = {
+        super_admin: { bg: 'var(--accent-red-dim)', color: 'var(--accent-red)' },
+        owner: { bg: 'var(--accent-violet-dim)', color: 'var(--accent-violet)' },
+        admin: { bg: 'var(--accent-cyan-dim)', color: 'var(--accent-cyan)' },
+    }
+    const role = roleColor[user?.role] || { bg: 'var(--bg-tertiary)', color: 'var(--text-muted)' }
 
     return (
         <aside className="sidebar">
-            {/* Logo */}
             <Link to="/" className="sidebar-logo">
                 <div className="sidebar-logo-icon">◈</div>
                 <span className="sidebar-logo-text">Consonant</span>
             </Link>
 
-            {/* Navigation */}
             <div className="sidebar-section">
                 <div className="sidebar-section-label">Platform</div>
                 <nav className="sidebar-nav">
-                    {navItems.map((item) => (
-                        <NavLink
-                            key={item.path}
-                            to={item.path}
-                            end={item.end}
-                            className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
-                        >
+                    {navItems.filter(item => !item.feature || hasFeature(item.feature)).map(item => (
+                        <NavLink key={item.path} to={item.path} end={item.end}
+                            className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
                             <span className="sidebar-link-icon">{item.icon}</span>
                             <span className="sidebar-link-text">{item.label}</span>
                         </NavLink>
                     ))}
                 </nav>
 
-                {/* Admin-only section */}
                 {isAdmin && (
                     <>
-                        <div className="sidebar-section-label" style={{ marginTop: 'var(--space-6)' }}>Security</div>
+                        <div className="sidebar-section-label" style={{ marginTop: 'var(--space-6)' }}>Administration</div>
                         <nav className="sidebar-nav">
-                            {adminItems.map((item) => (
-                                <NavLink
-                                    key={item.path}
-                                    to={item.path}
-                                    className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
-                                >
+                            {adminItems.filter(item => {
+                                if (item.superAdminOnly) return isSuperAdmin
+                                return !item.feature || hasFeature(item.feature)
+                            }).map(item => (
+                                <NavLink key={item.path} to={item.path}
+                                    className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
                                     <span className="sidebar-link-icon">{item.icon}</span>
                                     <span className="sidebar-link-text">{item.label}</span>
                                 </NavLink>
@@ -65,7 +67,6 @@ export default function Sidebar() {
                 )}
             </div>
 
-            {/* Bottom section */}
             <div className="sidebar-bottom">
                 <div className="sidebar-section-label">Support</div>
                 <NavLink to="#" className="sidebar-link">
@@ -82,12 +83,11 @@ export default function Sidebar() {
                     <div className="sidebar-org-info">
                         <span className="sidebar-org-name">{user?.organization || 'Synveritas Corp'}</span>
                         <span className="sidebar-org-role" style={{
-                            background: user?.role === 'owner' ? 'var(--accent-violet-dim)' : 'var(--bg-tertiary)',
-                            color: user?.role === 'owner' ? 'var(--accent-violet)' : 'var(--text-muted)',
-                            padding: '1px 8px', borderRadius: 'var(--radius-sm)', fontSize: '0.65rem', fontWeight: 700,
-                            textTransform: 'uppercase', letterSpacing: '0.05em'
+                            background: role.bg, color: role.color,
+                            padding: '1px 8px', borderRadius: 'var(--radius-sm)', fontSize: '0.65rem',
+                            fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em'
                         }}>
-                            {user?.role || 'Admin'}
+                            {user?.role?.replace('_', ' ') || 'Admin'}
                         </span>
                     </div>
                 </div>

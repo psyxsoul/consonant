@@ -52,17 +52,24 @@ export function AuthProvider({ children }) {
         setUser(null)
     }
 
-    const isOwner = user?.role === 'owner'
+    // Role helpers
+    const isSuperAdmin = user?.role === 'super_admin'
+    const isOwner = user?.role === 'owner' || isSuperAdmin
     const isAdmin = user?.role === 'admin' || isOwner
     const isAnalyst = user?.role === 'analyst' || isAdmin
     const canWrite = isAdmin
     const canRead = !!user
 
+    // Feature gating
+    const features = user?.features || []
+    const hasFeature = (key) => isSuperAdmin || features.includes(key)
+
     return (
         <AuthContext.Provider value={{
             user, token, loading, login, loginWithGoogle, register, logout,
             isAuthenticated: !!token,
-            isOwner, isAdmin, isAnalyst, canWrite, canRead
+            isSuperAdmin, isOwner, isAdmin, isAnalyst, canWrite, canRead,
+            features, hasFeature
         }}>
             {children}
         </AuthContext.Provider>

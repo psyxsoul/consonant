@@ -14,6 +14,7 @@ import AuditLog from './pages/AuditLog'
 import DataSources from './pages/DataSources'
 import CoPilot from './pages/CoPilot'
 import LLMFirewall from './pages/LLMFirewall'
+import LicenseManager from './pages/LicenseManager'
 
 function ProtectedRoute({ children }) {
     const { isAuthenticated, loading } = useAuth()
@@ -22,9 +23,15 @@ function ProtectedRoute({ children }) {
 }
 
 function AdminRoute({ children }) {
-    const { isAdmin, loading } = useAuth()
+    const { isAuthenticated, user, loading } = useAuth()
     if (loading) return null
-    return isAdmin ? children : <Navigate to="/dashboard" replace />
+    return (isAuthenticated && (user?.role === 'admin' || user?.role === 'owner' || user?.role === 'super_admin')) ? children : <Navigate to="/dashboard" replace />
+}
+
+function SuperAdminRoute({ children }) {
+    const { isAuthenticated, user, loading } = useAuth()
+    if (loading) return null
+    return (isAuthenticated && user?.role === 'super_admin') ? children : <Navigate to="/dashboard" replace />
 }
 
 function AppRoutes() {
@@ -43,6 +50,7 @@ function AppRoutes() {
                 <Route path="connectors" element={<AdminRoute><DataSources /></AdminRoute>} />
                 <Route path="copilot" element={<CoPilot />} />
                 <Route path="firewall" element={<LLMFirewall />} />
+                <Route path="licenses" element={<SuperAdminRoute><LicenseManager /></SuperAdminRoute>} />
             </Route>
         </Routes>
     )

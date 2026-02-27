@@ -90,6 +90,24 @@ const api = {
     scanDataSource: (id) => request(`/connectors/${id}/scan`, { method: 'POST' }),
     deleteDataSource: (id) => request(`/connectors/${id}`, { method: 'DELETE' }),
 
+    // Organizations
+    getOrgs: () => request('/orgs'),
+    createOrg: (data) => request('/orgs', { method: 'POST', body: JSON.stringify(data) }),
+    updateOrg: (id, data) => request(`/orgs/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    deleteOrg: (id) => request(`/orgs/${id}`, { method: 'DELETE' }),
+    getOrgUsers: (id) => request(`/orgs/${id}/users`),
+    assignUserToOrg: (orgId, data) => request(`/orgs/${orgId}/users`, { method: 'POST', body: JSON.stringify(data) }),
+
+    // Licenses & Features
+    getLicenses: () => request('/licenses'),
+    createLicense: (data) => request('/licenses', { method: 'POST', body: JSON.stringify(data) }),
+    updateLicense: (id, data) => request(`/licenses/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    deleteLicense: (id) => request(`/licenses/${id}`, { method: 'DELETE' }),
+    updateLicenseFeatures: (id, features) => request(`/licenses/${id}/features`, { method: 'PUT', body: JSON.stringify({ features }) }),
+    getFeatures: () => request('/licenses/features'),
+    getPlanPresets: () => request('/licenses/plans'),
+    getProxyLog: () => request('/ai/proxy-log').catch(() => []),
+
     // Audit Trail
     getAuditLog: (page = 1, limit = 50, filters = {}) => {
         const params = new URLSearchParams({ page, limit, ...filters })
