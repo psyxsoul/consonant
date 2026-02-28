@@ -1189,6 +1189,15 @@ h4 {
   color: var(--text-primary);
 }
 
+.sidebar-divider {
+  border: none;
+  height: 1px;
+  background: var(--border-default);
+  margin: var(--space-2) 0 var(--space-4) 0;
+  width: 100%;
+  opacity: 0.6;
+}
+
 .sidebar-section {
   flex: 1;
   display: flex;
@@ -1230,9 +1239,9 @@ h4 {
 }
 
 .sidebar-link.active {
-  background: rgba(208, 32, 32, 0.2);
+  background: var(--bg-glass-hover);
   color: var(--text-primary);
-  border: 1px solid rgba(208, 32, 32, 0.3);
+  border: 1px solid var(--border-subtle);
   font-weight: 600;
 }
 

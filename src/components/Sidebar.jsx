@@ -57,6 +57,8 @@ export default function Sidebar() {
                 <span className="sidebar-logo-text">Consonant</span>
             </Link>
 
+            <hr className="sidebar-divider" />
+
             <div className="sidebar-section">
                 <div className="sidebar-section-label">Platform</div>
                 <nav className="sidebar-nav">
@@ -86,6 +88,8 @@ export default function Sidebar() {
                     </>
                 )}
             </div>
+
+            <hr className="sidebar-divider" />
 
             <div className="sidebar-bottom">
                 <div className="sidebar-section-label">Support</div>
