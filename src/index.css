@@ -58,10 +58,10 @@
   --space-16: 64px;
   --space-20: 80px;
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
   --radius-full: 9999px;
   --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -367,8 +367,8 @@ h4 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 28px;
-  border-radius: var(--radius-full);
+  padding: 10px 24px;
+  border-radius: var(--radius-sm);
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
@@ -418,9 +418,9 @@ h4 {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 14px;
-  border-radius: var(--radius-full);
-  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.70rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
