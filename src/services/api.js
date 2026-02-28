@@ -68,7 +68,7 @@ const api = {
     // Guardrails
     getGuardrails: () => request('/guardrails'),
     getGuardrailStats: () => request('/guardrails/stats'),
-    toggleGuardrail: (id) => request(`/guardrails/${id}/toggle`, { method: 'PUT' }),
+    toggleGuardrail: (id, payload) => request(`/guardrails/${id}/toggle`, { method: 'PUT', body: JSON.stringify(payload) }),
     getProxyLog: () => request('/guardrails/proxy-log'),
     getVaults: () => request('/guardrails/vaults'),
 

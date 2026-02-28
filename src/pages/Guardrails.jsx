@@ -14,9 +14,9 @@ export default function Guardrails() {
 
     const load = () => {
         Promise.all([
-            api.getGuardrailConfig(),
-            api.getPrivacyVaults(),
-            api.getProxyLogs()
+            api.getGuardrails(),
+            api.getVaults(),
+            api.getProxyLog()
         ]).then(([c, v, p]) => {
             setConfig(c)
             setVaults(v)
@@ -29,7 +29,7 @@ export default function Guardrails() {
 
     const toggle = async (key) => {
         try {
-            const res = await api.toggleGuardrail({ key, enabled: !config[key] })
+            const res = await api.toggleGuardrail(key, { enabled: !config[key] })
             setConfig(res.config)
         } catch (err) { setError(err.message) }
     }
@@ -38,7 +38,7 @@ export default function Guardrails() {
         e.preventDefault(); if (!form.payload.trim()) return
         setAiLoading(true); setAiResult(null)
         try {
-            const result = await api.assessRisk(form)
+            const result = await api.riskAssessment(form)
             setAiResult(result); load()
         } catch (err) { setError(err.message) }
         finally { setAiLoading(false) }
