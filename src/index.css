@@ -6,36 +6,46 @@
 
 /* ========== Theme Variables ========== */
 :root {
-  --bg-primary: #06080f;
-  --bg-secondary: #0c1022;
-  --bg-tertiary: #121836;
-  --bg-surface: rgba(15, 23, 55, 0.6);
-  --bg-glass: rgba(15, 23, 55, 0.45);
-  --bg-glass-hover: rgba(20, 30, 70, 0.55);
+  /* Synveritas Core Palette */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #121212;
+  --bg-tertiary: #18181b;
+  /* zinc-900 */
+  --bg-surface: rgba(24, 24, 27, 0.6);
+  --bg-glass: rgba(18, 18, 18, 0.75);
+  --bg-glass-hover: rgba(39, 39, 42, 0.5);
+  /* hover:bg-white/5 */
 
-  --text-primary: #edf2f7;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --text-inverse: #0a0e27;
+  --text-primary: #f8fafc;
+  --text-secondary: #a1a1aa;
+  /* zinc-400 */
+  --text-muted: #71717a;
+  /* zinc-500 */
+  --text-inverse: #000000;
 
-  --border-subtle: rgba(148, 163, 184, 0.08);
-  --border-default: rgba(148, 163, 184, 0.12);
-  --border-accent: rgba(0, 212, 255, 0.25);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-accent: rgba(211, 47, 47, 0.3);
+  /* Brand Red border */
 
-  --accent-cyan: #00d4ff;
-  --accent-cyan-dim: rgba(0, 212, 255, 0.15);
+  /* Synveritas Accents */
+  --accent-cyan: #3b82f6;
+  /* Blue for general info */
+  --accent-cyan-dim: rgba(59, 130, 246, 0.15);
   --accent-violet: #8b5cf6;
   --accent-violet-dim: rgba(139, 92, 246, 0.15);
   --accent-green: #10b981;
+  /* Compliance / Success */
   --accent-green-dim: rgba(16, 185, 129, 0.15);
   --accent-amber: #f59e0b;
   --accent-amber-dim: rgba(245, 158, 11, 0.15);
-  --accent-red: #ef4444;
-  --accent-red-dim: rgba(239, 68, 68, 0.15);
+  --accent-red: #d32f2f;
+  /* Brand Red */
+  --accent-red-dim: rgba(211, 47, 47, 0.15);
 
-  --gradient-accent: linear-gradient(135deg, #00d4ff, #8b5cf6);
-  --shadow-color: rgba(0, 0, 0, 0.5);
-  --shadow-glow: rgba(0, 212, 255, 0.15);
+  --gradient-accent: linear-gradient(135deg, #d32f2f, #f43f5e);
+  --shadow-color: rgba(0, 0, 0, 0.8);
+  --shadow-glow: rgba(211, 47, 47, 0.15);
 
   --space-1: 4px;
   --space-2: 8px;
@@ -48,44 +58,45 @@
   --space-16: 64px;
   --space-20: 80px;
 
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
   --radius-full: 9999px;
-  --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 [data-theme='light'] {
-  --bg-primary: #f8fafc;
-  --bg-secondary: #f1f5f9;
-  --bg-tertiary: #e2e8f0;
+  /* Synveritas Light Mode Variant (if needed, though platform leans dark) */
+  --bg-primary: #f4f4f5;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e4e4e7;
   --bg-surface: rgba(255, 255, 255, 0.9);
   --bg-glass: rgba(255, 255, 255, 0.75);
-  --bg-glass-hover: rgba(255, 255, 255, 0.95);
+  --bg-glass-hover: rgba(244, 244, 245, 0.95);
 
-  --text-primary: #0f172a;
-  --text-secondary: #334155;
-  --text-muted: #64748b;
-  --text-inverse: #f8fafc;
+  --text-primary: #09090b;
+  --text-secondary: #52525b;
+  --text-muted: #71717a;
+  --text-inverse: #ffffff;
 
-  --border-subtle: rgba(15, 23, 42, 0.08);
-  --border-default: rgba(15, 23, 42, 0.15);
-  --border-accent: rgba(14, 165, 233, 0.5);
+  --border-subtle: rgba(0, 0, 0, 0.05);
+  --border-default: rgba(0, 0, 0, 0.1);
+  --border-accent: rgba(211, 47, 47, 0.3);
 
-  --accent-cyan: #0284c7;
-  --accent-cyan-dim: rgba(2, 132, 199, 0.15);
+  --accent-cyan: #2563eb;
+  --accent-cyan-dim: rgba(37, 99, 235, 0.15);
   --accent-violet: #6d28d9;
   --accent-violet-dim: rgba(109, 40, 217, 0.15);
   --accent-green: #059669;
   --accent-green-dim: rgba(5, 150, 105, 0.15);
   --accent-amber: #d97706;
   --accent-amber-dim: rgba(217, 119, 6, 0.15);
-  --accent-red: #dc2626;
-  --accent-red-dim: rgba(220, 38, 38, 0.15);
+  --accent-red: #d32f2f;
+  --accent-red-dim: rgba(211, 47, 47, 0.15);
 
-  --shadow-color: rgba(15, 23, 42, 0.08);
-  --shadow-glow: rgba(14, 165, 233, 0.15);
+  --shadow-color: rgba(0, 0, 0, 0.05);
+  --shadow-glow: rgba(211, 47, 47, 0.15);
 }
 
 /* ========== Reset ========== */
@@ -1154,13 +1165,15 @@ h4 {
 }
 
 .sidebar-link:hover {
-  background: var(--bg-tertiary);
+  background: var(--bg-glass-hover);
   color: var(--text-primary);
 }
 
 .sidebar-link.active {
-  background: var(--accent-cyan-dim);
-  color: var(--accent-cyan);
+  background: var(--accent-red-dim);
+  color: var(--text-primary);
+  border: 1px solid var(--border-accent);
+  box-shadow: 0 0 15px var(--shadow-glow);
   font-weight: 600;
 }
 
@@ -1416,16 +1429,19 @@ h4 {
 
 .kpi-card {
   background: var(--bg-secondary);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
   padding: var(--space-4) var(--space-6);
   position: relative;
   overflow: hidden;
-  transition: all 0.2s ease;
+  box-shadow: 0 4px 20px var(--shadow-color);
+  transition: all 0.3s ease;
 }
 
 .kpi-card:hover {
   border-color: var(--border-accent);
+  box-shadow: 0 8px 30px var(--shadow-glow);
+  transform: translateY(-2px);
 }
 
 .kpi-top {
@@ -1478,8 +1494,11 @@ h4 {
 /* ===== Cards ===== */
 .card {
   background: var(--bg-secondary);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  /* subtle border */
+  border-radius: var(--radius-xl);
+  /* match Synveritas large rounded corners */
+  box-shadow: 0 4px 20px var(--shadow-color);
   overflow: hidden;
 }
 
