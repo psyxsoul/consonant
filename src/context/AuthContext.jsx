@@ -62,7 +62,7 @@ export function AuthProvider({ children }) {
 
     // Feature gating
     const features = user?.features || []
-    const hasFeature = (key) => isSuperAdmin || features.includes(key)
+    const hasFeature = (key) => isSuperAdmin || isOwner || features.includes(key)
 
     return (
         <AuthContext.Provider value={{

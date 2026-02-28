@@ -1193,8 +1193,8 @@ h4 {
   border: none;
   height: 1px;
   background: var(--border-default);
-  margin: var(--space-2) 0 var(--space-4) 0;
-  width: 100%;
+  margin: var(--space-4) calc(var(--space-6) * -1);
+  width: calc(100% + var(--space-6) * 2);
   opacity: 0.6;
 }
 
@@ -1239,9 +1239,9 @@ h4 {
 }
 
 .sidebar-link.active {
-  background: var(--bg-glass-hover);
+  background: transparent;
   color: var(--text-primary);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid transparent;
   font-weight: 600;
 }
 
