@@ -2,14 +2,14 @@
    CONSONANT — Design System (V3 — Clean Rewrite)
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 /* ========== Theme Variables ========== */
 :root {
   /* Synveritas Core Palette */
   --bg-primary: #0a0a0a;
-  --bg-secondary: #121212;
-  --bg-tertiary: #18181b;
+  --bg-secondary: rgba(26, 26, 26, 0.5);
+  --bg-tertiary: rgba(26, 26, 26, 0.7);
   /* zinc-900 */
   --bg-surface: rgba(24, 24, 27, 0.6);
   --bg-glass: rgba(18, 18, 18, 0.75);
@@ -113,7 +113,7 @@ html {
 }
 
 body {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.6;
@@ -1092,6 +1092,8 @@ h4 {
   width: 250px;
   min-width: 250px;
   background: var(--bg-secondary);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-right: 1px solid var(--border-default);
   display: flex;
   flex-direction: column;
@@ -1228,10 +1230,9 @@ h4 {
 }
 
 .sidebar-link.active {
-  background: var(--accent-red-dim);
+  background: rgba(208, 32, 32, 0.2);
   color: var(--text-primary);
-  border: 1px solid var(--border-accent);
-  box-shadow: 0 0 15px var(--shadow-glow);
+  border: 1px solid rgba(208, 32, 32, 0.3);
   font-weight: 600;
 }
 
@@ -1553,9 +1554,9 @@ h4 {
 .card {
   background: var(--bg-secondary);
   border: 1px solid var(--border-subtle);
-  /* subtle border */
-  border-radius: var(--radius-xl);
-  /* match Synveritas large rounded corners */
+  border-radius: 16px;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   box-shadow: 0 4px 20px var(--shadow-color);
   overflow: hidden;
 }
