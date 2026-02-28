@@ -39,13 +39,13 @@
   --accent-green-dim: rgba(16, 185, 129, 0.15);
   --accent-amber: #f59e0b;
   --accent-amber-dim: rgba(245, 158, 11, 0.15);
-  --accent-red: #d32f2f;
+  --accent-red: #e11d48;
   /* Brand Red */
-  --accent-red-dim: rgba(211, 47, 47, 0.15);
+  --accent-red-dim: rgba(225, 29, 72, 0.15);
 
-  --gradient-accent: linear-gradient(135deg, #d32f2f, #f43f5e);
+  --gradient-accent: linear-gradient(135deg, #e11d48, #f43f5e);
   --shadow-color: rgba(0, 0, 0, 0.8);
-  --shadow-glow: rgba(211, 47, 47, 0.15);
+  --shadow-glow: rgba(225, 29, 72, 0.15);
 
   --space-1: 4px;
   --space-2: 8px;
@@ -92,11 +92,11 @@
   --accent-green-dim: rgba(5, 150, 105, 0.15);
   --accent-amber: #d97706;
   --accent-amber-dim: rgba(217, 119, 6, 0.15);
-  --accent-red: #d32f2f;
-  --accent-red-dim: rgba(211, 47, 47, 0.15);
+  --accent-red: #e11d48;
+  --accent-red-dim: rgba(225, 29, 72, 0.15);
 
   --shadow-color: rgba(0, 0, 0, 0.05);
-  --shadow-glow: rgba(211, 47, 47, 0.15);
+  --shadow-glow: rgba(225, 29, 72, 0.15);
 }
 
 /* ========== Reset ========== */
@@ -1099,6 +1099,64 @@ h4 {
   gap: var(--space-4);
   z-index: 20;
   overflow-y: auto;
+  transition: width 0.3s ease, min-width 0.3s ease, padding 0.3s ease;
+  position: relative;
+}
+
+.sidebar.collapsed {
+  width: 80px;
+  min-width: 80px;
+  padding: var(--space-6) var(--space-3);
+  overflow-x: hidden;
+}
+
+/* Sidebar Toggle Button */
+.sidebar-toggle {
+  position: absolute;
+  top: 24px;
+  right: -14px;
+  width: 28px;
+  height: 28px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-default);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 50;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.sidebar-toggle:hover {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border-color: var(--accent-red);
+}
+
+.sidebar.collapsed .sidebar-logo-text,
+.sidebar.collapsed .sidebar-section-label,
+.sidebar.collapsed .sidebar-link-text,
+.sidebar.collapsed .sidebar-org-info {
+  display: none;
+}
+
+.sidebar.collapsed .sidebar-logo {
+  justify-content: center;
+  margin-bottom: var(--space-4);
+}
+
+.sidebar.collapsed .sidebar-link {
+  justify-content: center;
+  padding: 12px;
+}
+
+.sidebar.collapsed .sidebar-org {
+  justify-content: center;
+  padding: var(--space-2);
 }
 
 .sidebar-logo {

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { NavLink, Link, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
@@ -22,6 +23,15 @@ export default function Sidebar() {
     const { user, isAdmin, isSuperAdmin, hasFeature } = useAuth()
     const { slug } = useParams()
 
+    const [collapsed, setCollapsed] = useState(() => {
+        const saved = localStorage.getItem('sidebar_collapsed')
+        return saved === 'true'
+    })
+
+    useEffect(() => {
+        localStorage.setItem('sidebar_collapsed', collapsed)
+    }, [collapsed])
+
     // Build the base path — slug-based or legacy
     const basePath = slug ? `/${slug}/dashboard` : '/dashboard'
 
@@ -33,8 +43,16 @@ export default function Sidebar() {
     const role = roleColor[user?.role] || { bg: 'var(--bg-tertiary)', color: 'var(--text-muted)' }
 
     return (
-        <aside className="sidebar">
-            <Link to="/" className="sidebar-logo">
+        <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
+            <button
+                className="sidebar-toggle"
+                onClick={() => setCollapsed(!collapsed)}
+                title={collapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+            >
+                {collapsed ? '→' : '←'}
+            </button>
+
+            <Link to="/" className="sidebar-logo" title={collapsed ? "Consonant" : undefined}>
                 <div className="sidebar-logo-icon">◈</div>
                 <span className="sidebar-logo-text">Consonant</span>
             </Link>
@@ -44,7 +62,8 @@ export default function Sidebar() {
                 <nav className="sidebar-nav">
                     {navItems.filter(item => !item.feature || hasFeature(item.feature)).map(item => (
                         <NavLink key={item.path} to={`${basePath}${item.path}`} end={item.end}
-                            className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+                            className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
+                            title={collapsed ? item.label : undefined}>
                             <span className="sidebar-link-icon">{item.icon}</span>
                             <span className="sidebar-link-text">{item.label}</span>
                         </NavLink>
@@ -57,7 +76,8 @@ export default function Sidebar() {
                         <nav className="sidebar-nav">
                             {adminItems.filter(item => !item.feature || hasFeature(item.feature)).map(item => (
                                 <NavLink key={item.path} to={`${basePath}${item.path}`}
-                                    className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+                                    className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
+                                    title={collapsed ? item.label : undefined}>
                                     <span className="sidebar-link-icon">{item.icon}</span>
                                     <span className="sidebar-link-text">{item.label}</span>
                                 </NavLink>
@@ -69,16 +89,16 @@ export default function Sidebar() {
 
             <div className="sidebar-bottom">
                 <div className="sidebar-section-label">Support</div>
-                <NavLink to="#" className="sidebar-link">
+                <NavLink to="#" className="sidebar-link" title={collapsed ? "Settings" : undefined}>
                     <span className="sidebar-link-icon">⚙️</span>
                     <span className="sidebar-link-text">Settings</span>
                 </NavLink>
-                <NavLink to="#" className="sidebar-link">
+                <NavLink to="#" className="sidebar-link" title={collapsed ? "Help" : undefined}>
                     <span className="sidebar-link-icon">💬</span>
                     <span className="sidebar-link-text">Help</span>
                 </NavLink>
 
-                <div className="sidebar-org">
+                <div className="sidebar-org" title={collapsed ? (user?.organization || 'Synveritas Corp') : undefined}>
                     <div className="sidebar-org-icon">🏢</div>
                     <div className="sidebar-org-info">
                         <span className="sidebar-org-name">{user?.organization || 'Synveritas Corp'}</span>
